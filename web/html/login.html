@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8">
+		<title>Squirrel</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+		<link href="../css/roboto.css" rel="stylesheet">
+		<link rel="stylesheet" href="../css/statusbar.css">
+		<link rel="stylesheet" href="../css/login.css">
+		<link rel="icon" href="../../res/squirrel.png" />
+
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+		<script src="../js/login.js" charset="utf-8" ></script>
+	</head>
+
+	<body>
+		<form>
+			<div id="left">
+				<div class="form-group">
+					<input id="editTextFile" class="form-control" type="text" placeholder="Chemin vers le fichier de mots de passes" />
+					<div id="buttonFile" type="file" class="btn btn-primary">...</div>
+					<div id="buttonNewFile" type="file" class="btn btn-success"><img src="../../res/plus.svg"/></div>
+				</div>
+				<div class="form-group">
+					<input id="editTextPassword" class="form-control" type="password" placeholder="Mot de passe" />
+				</div>
+			</div>
+			<div id="buttonSubmit" class="btn btn-primary"><img src="../../res/unlock.svg"/></div>
+		</form>
+	</body>
+</html>

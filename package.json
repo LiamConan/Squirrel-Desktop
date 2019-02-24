@@ -1,0 +1,34 @@
+{
+  "name": "squirrel",
+  "version": "1.0.0",
+  "description": "Un keypass au design original",
+  "main": "main.js",
+  "scripts": {
+    "test": "electron .",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=res/squirrel.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . Squirrel --overwrite --asar --platform=win32 --arch=ia32 --icon=res/squirrel.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Squirrel\"",
+    "package-linux": "electron-packager . Squirrel --overwrite --asar=true --platform=linux --arch=x64 --icon=res/squirrel.png --prune=true --out=release-builds"
+  },
+  "author": "Liam",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/username/repository.git"
+  },
+  "devDependencies": {
+    "electron": "^4.0.5"
+  },
+  "ember-electron": {
+    "icon": "res/squirrel.ico"
+  },
+  "dependencies": {
+    "aes-cross": "^1.0.9",
+    "copy-to-clipboard": "^3.0.8",
+    "get-stdin": "^5.0.1",
+    "keypress": "^0.2.1",
+    "node-datetime": "^2.0.3",
+    "randomstring": "^1.1.5",
+    "sha256": "^0.2.0",
+    "utf8": "^3.0.0"
+  }
+}

@@ -1,0 +1,346 @@
+html
+{
+	height: 100%;
+}
+body
+{
+	height: 100%;
+	min-width: 1000px;
+	margin: 0;
+	background-color: #313440;
+	font-family: 'Roboto', sans-serif;
+	overflow: hidden;
+}
+
+::-webkit-scrollbar {
+	width: 12px;
+	background-color: #313440;
+}
+
+::-webkit-scrollbar-thumb {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #3C6DA8;
+}
+
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #313440;
+}
+
+#left_pan
+{
+	position: fixed;
+	width: 20%;
+	min-width: 242px;
+	height: 100%;
+	padding: 10px;
+	color: #9EA1B4;
+	background-color: #262831;
+	border-right: 1px solid black;
+	text-align: center;
+	z-index: 2;
+}
+
+#left_pan h2
+{
+	font-size: 16px;
+}
+#left_pan #dirs ul
+{
+	text-align: left;
+	font-size: 14px;
+	list-style-type: none;
+	padding-left: 10px;
+}
+#left_pan #dirs ul li
+{
+	padding: 6px;
+	border-radius: 4px;
+	padding-left: 10px;
+	cursor: pointer;
+}
+
+#block-new_dir
+{
+	position: absolute;
+	bottom: 14px;
+	display: block;
+	width: 100%;
+	text-align: left;
+}
+#editTextNewDir
+{
+	display: inline-block;
+	width: calc(100% - 80px);
+	color: #9EA1B4;
+	background-color: #353B45;
+	border-color: #353B45;
+}
+#add_dir
+{
+	display: inline-block;
+}
+
+
+
+#main_frame_margin_left
+{
+	position: relative;
+	float: left;
+	width: 20%;
+	min-width: 245px;
+	height: 100%;
+	z-index: 1;
+}
+
+#main_frame
+{
+	min-width: 435px;
+	height: 100%;
+	overflow: hidden;
+}
+
+#list_frame
+{
+	position: relative;
+	float: left;
+	width: 100%;
+	height: 100%;
+}
+
+#list
+{
+	width: 100%;
+	height: 100%;
+	padding: 10px;
+	vertical-align: top;
+	overflow: auto;
+}
+#list #keys
+{
+	margin: 10px 10px 50px 10px;
+	padding: 0;
+	list-style-type: none;
+}
+#list #keys li
+{
+	height: 50px;
+	padding-left: 10px;
+	line-height: 50px;
+	border-radius: 5px;
+	color: white;
+	cursor: pointer;
+}
+#list #keys li:nth-child(2n+1)
+{
+	background-color: #6E7180;
+}
+
+#list #keys li .icon_drag
+{
+	float: left;
+	margin-top: 12px;
+	margin-right: 20px;
+}
+
+#list #keys li .keys_title
+{
+	display: inline-block;
+}
+#list #keys li .date
+{
+	float: right;
+	margin-right: 10px;
+	font-size: 12px;
+}
+
+#list #keys li:nth-child(2n+1):hover
+{
+	background-color: #7b7e8c;
+}
+#list #keys li:nth-child(2n):hover
+{
+	background-color: #3d414f;
+}
+
+#block-new_key
+{
+	position: absolute;
+	bottom: 14px;
+	left: 15px;
+	width: 97%;
+	text-align: left;
+}
+
+#editTextNewKey
+{
+	position: relative;
+	display: inline-block;
+	width: calc(100% - 60px);
+	color: #9EA1B4;
+	background-color: #353B45;
+	border-color: #353B45;
+}
+#add_key
+{
+	display: inline-block;
+}
+
+
+#key
+{
+	position: relative;
+	display: none;
+	float: right;
+	width: 49%;
+	height: 100%;
+	padding: 10px;
+	border-left: 1px solid black;
+	vertical-align: top;
+	background-color: #262831;
+	box-shadow: -5px 0px 20px 0px rgba(0, 0, 0, .3);
+}
+#key:hover #key_close
+{
+	width: 30px;
+}
+
+#key_close
+{
+	position: absolute;
+	width: 0;
+	height: 50px;
+	top: 50%;
+	right: 100%;
+	border-top: 0.5px solid black;
+	border-bottom: 0.5px solid black;
+	border-left: 0.5px solid black;
+	border-radius: 50px 0 0 50px;
+	background-color: #262831;
+	transition: width 0.3s;
+	overflow: hidden;
+}
+
+#key_close img
+{
+	margin: 12px 0 0 6px;
+}
+
+#key_close:hover
+{
+	cursor: pointer;
+}
+
+.dropdown
+{
+	width: 100%;
+	margin: 10px 0 10px 0;
+}
+
+#del-user
+{
+	margin-left: 10px;
+}
+
+#key h2
+{
+	display: inline-block;
+	margin: 0;
+	vertical-align: middle;
+	color: #6E7180;
+}
+
+#key form
+{
+	padding: 20px;
+}
+
+#key_title
+{
+	display: inline-block;
+	width: 50%;
+}
+#key_title, #user, #mail, #password, #url, #note
+{
+	color: #9EA1B4;
+	background-color: #353B45;
+	border-color: #353B45;
+	resize: none;
+}
+
+#user, #mail, #password, #url
+{
+	display: inline-block;
+	width: calc(100% - 54px);
+}
+
+#copy_username, #copy_mail, #copy_url
+{
+	display: inline-block;
+}
+
+#generate_password
+{
+	display: inline-block;
+}
+
+#key_save
+{
+	display: inline-block;
+	margin-left: 10px;
+	padding: 10px;
+}
+
+#copy_password
+{
+	position: relative;
+	width: 100%;
+	height: 200px;
+}
+#copy_password img
+{
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.alert
+{
+	display: none;
+}
+
+#nb-charac
+{
+	width: 200px;
+	color: #9EA1B4;
+	background-color: #353B45;
+	border-color: #353B45;
+	resize: none;
+}
+
+#generate
+{
+	display: inline-block;
+}
+
+#edittext-generated-pass
+{
+	display: inline-block;
+	width: calc(100% - 90px);
+	color: #9EA1B4;
+	background-color: #353B45;
+	border-color: #353B45;
+	resize: none;
+}
+
+.btn
+{
+	cursor: pointer;
+}
+
+#copied
+{
+	position: absolute;
+	bottom: 0;
+	width: 97%;
+}
