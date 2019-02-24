@@ -1,7 +1,7 @@
 # Squirrel-Desktop
 Open key pass in Node.js for all desktop platform
 
-![Alt text](screenshot.jpg?raw=true "Title")
+![Alt text](https://github.com/GabrielKaci/Squirrel-Desktop/blob/master/screenshot.png?raw=true "Title")
 
 ## Install
 
