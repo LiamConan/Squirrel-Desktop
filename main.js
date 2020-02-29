@@ -8,6 +8,7 @@ const randomstring = require("randomstring")
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const ipc = electron.ipcMain
+const homedir = require('os').homedir();
 
 let window
 let renderPath = `file://${__dirname}/web/html/`
@@ -22,11 +23,8 @@ let creatingSubKey = -1
 let selectedDirectory = -1 // Dir of the selected key
 let selectedKey = -1
 let selectedSubKey = -1
-let homePath = app.getPath('documents').split('\\')
 
 function createWindow() {
-    homePath.pop()
-    homePath = homePath.join('/') + '/AppData/Local/Squirrel'
 
 	window = new BrowserWindow({
 		width: 800,
@@ -87,7 +85,7 @@ function loadIPC() {
         if (createFile) {
             createFile = false
             save(file, JSON.stringify({"dirs": []}), password, function () {
-                login(event, file, homePath, password, function (content) {
+                login(event, file, homedir, password, function (content) {
                     json = content
                     window.loadURL(renderPath + 'home.html')
                     window.setResizable(true)
@@ -95,7 +93,7 @@ function loadIPC() {
                 })
             })
         } else
-            login(event, file, homePath, password, function (content) {
+            login(event, file, homedir, password, function (content) {
                 json = content
                 window.hide()
                 window.loadURL(renderPath + 'home.html')
@@ -339,7 +337,7 @@ function loadIPC() {
     })
 
     ipc.on('get-filename', (event, _) => {
-        fs.readFile(homePath + '/path', 'utf8', function (err, data) {
+        fs.readFile(homedir + '/path', 'utf8', function (err, data) {
             if (err)
                 return
 
@@ -363,12 +361,12 @@ app.on('activate', () => {
 })
 
 
-function login(event, file, homePath, password, callback) {
+function login(event, file, homedir, password, callback) {
 	if (file != null) {
-		if (!fs.existsSync(homePath))
-			fs.mkdirSync(homePath)
+		if (!fs.existsSync(homedir))
+			fs.mkdirSync(homedir)
 
-		fs.writeFile(homePath + '/path', file.toString(), function (err) {
+		fs.writeFile(homedir + '/path', file.toString(), function (err) {
 			if (err)
 				return console.log(err)
 		})
