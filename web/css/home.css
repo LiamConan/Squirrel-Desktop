@@ -303,6 +303,13 @@ body
 	top: 50%;
 	transform: translateY(-50%);
 }
+#copy_password #btn-text
+{
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+	margin: auto;
+}
 
 .alert
 {
