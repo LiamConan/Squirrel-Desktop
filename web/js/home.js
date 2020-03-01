@@ -12,13 +12,13 @@ $(function () {
 	let ctrl = false;
 
 	$(document).on('keydown', function (e) {
-		if (e.code === 17) {
+		if (e.key === 'Control') {
 			ctrl = true;
 			$('#list #keys li:nth-child(2n+1)').css('background-color', '#3C6DA8');
 		}
 	});
 	$(document).on('keyup', function (e) {
-		if (e.code === 17) {
+		if (e.key === 'Control') {
 			ctrl = false;
 			$('#list #keys li:nth-child(2n+1)').css('background-color', '#6E7180');
 		}
@@ -62,34 +62,34 @@ $(function () {
 		if (data.dirs.length > 0)
 			showKeys(data.dirs[0].keys);
 
-		$('#add_dir').click(function () {
+		$('#add_dir').on('click', function () {
 			onAddDirectory();
 		});
 
 		$("#editTextNewDir").on('keyup', function (e) {
-			if (e.code === 13)
+			if (e.key === 'Enter')
 				onAddDirectory();
 		});
 
-		$('#add_key').click(function () {
+		$('#add_key').on('click', function () {
 			onAddKey();
 		});
 
-		$('#editTextNewKey').keyup(function (e) {
-			if (e.code === 13)
+		$('#editTextNewKey').on('keyup', function (e) {
+			if (e.key === 'Enter')
 				onAddKey();
 		});
 
-		$('#add-user').click(function () {
+		$('#add-user').on('click', function () {
 			onAddUser();
 		});
 
-		$('#del-user').click(function () {
+		$('#del-user').on('click', function () {
 			deleteSubKey = true;
 			openDeleteKeyModal();
 		});
 
-		$('#key_save').click(function () {
+		$('#key_save').on('click', function () {
 			let title = $('#key_title').val()
 			let user = $('#user').val()
 			let email = $('#mail').val()
@@ -119,30 +119,30 @@ $(function () {
 			}
 		});
 
-		$('#key_close').click(function () {
+		$('#key_close').on('click', function () {
 			ipc.send('close-right-pan');
 		});
 
-		$('#copy_username').click(function () {
+		$('#copy_username').on('click', function () {
 			ipc.send('copy', 'username');
 			$('#copied').slideDown(500).delay(1000).slideUp(500)
 		});
 
-		$('#copy_mail').click(function () {
+		$('#copy_mail').on('click', function () {
 			ipc.send('copy', 'mail');
 			$('#copied').slideDown(500).delay(1000).slideUp(500)
 		});
 
-		$('#copy_password').click(function () {
+		$('#copy_password').on('click', function () {
 			ipc.send('copy', 'password');
 			$('#copied').slideDown(500).delay(1000).slideUp(500)
 		});
 
-		$('#copy_url').click(function () {
+		$('#copy_url').on('click', function () {
 			ipc.send('go-to-url');
 		});
 
-		$('#generate-password').click(function () {
+		$('#generate-password').on('click', function () {
 			let n = $('#nb-charac').val()
 			let min = $('#check-min').is(':checked');
 			let maj = $('#check-maj').is(':checked');
@@ -168,12 +168,12 @@ $(function () {
 			}
 		});
 
-		$('#validate-hash').click(function () {
+		$('#validate-hash').on('click', function () {
 			$('#password').val($('#edittext-generated-pass').val());
 			closePasswordGeneratorModal();
 		});
 
-		$('#cancel-hash').click(closePasswordGeneratorModal);
+		$('#cancel-hash').on('click', closePasswordGeneratorModal);
 
 		$("#keys").sortable({
 			group: 'no-drop',
@@ -193,16 +193,16 @@ $(function () {
 			}
 		});
 
-		$('#confirmRename').click(function () {
+		$('#confirmRename').on('click', function () {
 			$('#modalRename').modal('hide');
 			onRenameDir($('#editTextreNewName').val());
 		});
 
-		$('#cancelRename').click(function () {
+		$('#cancelRename').on('click', function () {
 			$('#modalRename').modal('hide');
 		});
 
-		$('#confirmDelete').click(function () {
+		$('#confirmDelete').on('click', function () {
 			if (dirIDToDelete !== -1) {
 				ipc.send('del-dir', dirIDToDelete);
 				dirIDToDelete = -1;
@@ -214,7 +214,7 @@ $(function () {
 			}
 		});
 
-		$('#cancelDelete').click(function () {
+		$('#cancelDelete').on('click', function () {
 			dirIDToDelete = -1;
 			keyIDToDelete = -1;
 		});
@@ -226,7 +226,7 @@ $(function () {
 		for (let i = 0; i < dirs.length; i++)
 			$('#list_dirs').append('<li><div class="dir_title ' + i + '">' + dirs[i].name + '</div></li>');
 
-		$('.dir_title').click(function () {
+		$('.dir_title').on('click', function () {
 			ipc.send('select-dir', $(this).attr('class').split(' ')[1]);
 		});
 
@@ -280,7 +280,7 @@ $(function () {
 			$('#keys').append(keyHTML);
 		}
 
-		$('.key').click(function () {
+		$('.key').on('click', function () {
 			if (ctrl) {
 				ctrl = false;
 				ipc.send('go-to-url', $(this).attr('class').split(' ')[1]);
@@ -316,7 +316,12 @@ $(function () {
 		$('#list_frame').css('width', '100%');
 		$('#block-new_key').css('width', '97%');
 
-		clearRightPan()
+		$('#key_title').val('');
+		$('#user').val('');
+		$('#mail').val('');
+		$('#password').val('');
+		$('#url').val('');
+		$('#note').val('');
 	}
 
 	function fillRightPan(key) {
@@ -325,21 +330,12 @@ $(function () {
 		for (let i = 0; i < subkeys.length; i++)
 			$('#dropdown-user').append('<a class="dropdown-item ' + i + '" href="#">' + subkeys[i].user + '</a>');
 
-		$('.dropdown-item').click(function () {
+		$('.dropdown-item').on('click', function () {
 			ipc.send('get-subkey', $(this).attr('class').split(' ')[1]);
 		});
 
 		$('#key_title').val(key.name);
 		showSubKey(subkeys[0])
-	}
-
-	function clearRightPan() {
-		$('#key_title').val('');
-		$('#user').val('');
-		$('#mail').val('');
-		$('#password').val('');
-		$('#url').val('');
-		$('#note').val('');
 	}
 
 	function showSubKey(arg) {

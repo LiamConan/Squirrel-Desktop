@@ -30,12 +30,14 @@ function createWindow() {
 		width: 800,
 		height: 175,
 		icon: path.join(__dirname, 'res/squirrel.png'),
-		backgroundColor: '#313440'
+		backgroundColor: '#313440',
+		webPreferences: {
+			nodeIntegration: true
+		},
+		resizable: false
 	})
 	window.setMenu(null)
-
-	window.loadURL(renderPath + 'login.html')
-
+	window.loadURL(renderPath + 'login.html').then()
 	window.on('closed', () => {
 		if (creatingKey !== -1) {
 			json.dirs[displayedDirectory].keys.splice(creatingKey, 1)
@@ -58,7 +60,7 @@ function loadIPC() {
 	ipc.on('choose-file', (event, _) => {
 		dialog.showOpenDialog(window, function (filename) {
 			if (filename === undefined)
-			return
+				return
 
 			file = filename
 			event.sender.send('filename', filename.toString())
@@ -67,16 +69,16 @@ function loadIPC() {
 
 	ipc.on('new-file', (event, _) => {
 		dialog.showSaveDialog(window, {
-			title: 'Nouveau registre de clés',
-			filters: [{name: 'Fichiers squirrel', extensions: ['sq']}]
-		},
-		(filename) => {
-			if (filename === undefined)
-			return
-			createFile = true
-			file = filename
-			event.sender.send('filename', filename.toString())
-		})
+				title: 'Nouveau registre de clés',
+				filters: [{name: 'Fichiers squirrel', extensions: ['sq']}]
+			},
+			(filename) => {
+				if (filename === undefined)
+					return
+				createFile = true
+				file = filename
+				event.sender.send('filename', filename.toString())
+			})
 	})
 
 	ipc.on('login', (event, arg) => {
@@ -88,17 +90,17 @@ function loadIPC() {
 				login(event, file, homedir, password, function (content) {
 					json = content
 					window.loadURL(renderPath + 'home.html')
-					window.setResizable(true)
+					window.resizable = true
 					window.maximize()
 				})
 			})
 		} else
-		login(event, file, homedir, password, function (content) {
-			json = content
-			window.loadURL(renderPath + 'home.html')
-			window.setResizable(true)
-			window.maximize()
-		})
+			login(event, file, homedir, password, function (content) {
+				json = content
+				window.loadURL(renderPath + 'home.html')
+				window.resizable = true
+				window.maximize()
+			})
 	})
 
 	ipc.on('get-data', (event, _) => {
@@ -143,7 +145,7 @@ function loadIPC() {
 				displayedDirectory = arg
 			}
 		} else
-		event.sender.send('key-saved')
+			event.sender.send('key-saved')
 	})
 
 	ipc.on('get-key', (event, arg) => {
@@ -153,27 +155,26 @@ function loadIPC() {
 			selectedKey = arg
 			selectedSubKey = 0
 		} else
-		event.sender.send('key-saved')
+			event.sender.send('key-saved')
 	})
 
 	ipc.on('go-to-url', (event, arg) => {
-		console.log(arg)
 		let subkeys
 		if (arg === undefined)
-		subkeys = json.dirs[displayedDirectory].keys[selectedKey].subkeys
+			subkeys = json.dirs[displayedDirectory].keys[selectedKey].subkeys
 		else
-		subkeys = json.dirs[displayedDirectory].keys[arg].subkeys
+			subkeys = json.dirs[displayedDirectory].keys[arg].subkeys
 		let i = 0
 
 		while (subkeys[i].url === '' && i < subkeys.length)
-		i++
+			i++
 		let url = subkeys[i].url
 
 		if (url != null && url !== '' && url !== "") {
 			if (null == url.match(/https?:\/\/*/))
-			shell.openExternal('http://' + url)
+				shell.openExternal('http://' + url).then()
 			else
-			shell.openExternal(url)
+				shell.openExternal(url).then()
 		} else {
 			event.sender.send('no-url')
 		}
@@ -183,7 +184,7 @@ function loadIPC() {
 		json.dirs[displayedDirectory].keys[selectedKey].subkeys[selectedSubKey] = arg.subkey
 
 		if (json.dirs[displayedDirectory].keys[selectedKey].name !== arg.name)
-		json.dirs[displayedDirectory].keys[selectedKey].name = arg.name
+			json.dirs[displayedDirectory].keys[selectedKey].name = arg.name
 
 		event.sender.send('send-keys', json.dirs[displayedDirectory].keys)
 
@@ -198,7 +199,7 @@ function loadIPC() {
 			event.sender.send('send-subkey', json.dirs[selectedDirectory].keys[selectedKey].subkeys[arg])
 			selectedSubKey = arg
 		} else
-		event.sender.send('key-saved')
+			event.sender.send('key-saved')
 	})
 
 	ipc.on('close-right-pan', (event) => {
@@ -241,7 +242,7 @@ function loadIPC() {
 		let date = new Date()
 		let day = date.getDay() - 1
 		if (day === -1)
-		day = 6
+			day = 6
 		let dateString = dayNames[day] + ' ' + date.getDate() + ' ' + monthNames[date.getMonth()] + ' ' + date.getFullYear()
 		let key = {
 			"name": arg,
@@ -286,11 +287,11 @@ function loadIPC() {
 
 	ipc.on('copy', (event, arg) => {
 		if (arg === 'username')
-		clipboard.writeText(json.dirs[selectedDirectory].keys[selectedKey].subkeys[selectedSubKey].user)
+			clipboard.writeText(json.dirs[selectedDirectory].keys[selectedKey].subkeys[selectedSubKey].user)
 		else if (arg === 'mail')
-		clipboard.writeText(json.dirs[selectedDirectory].keys[selectedKey].subkeys[selectedSubKey].mail)
+			clipboard.writeText(json.dirs[selectedDirectory].keys[selectedKey].subkeys[selectedSubKey].mail)
 		else if (arg === 'password')
-		clipboard.writeText(json.dirs[selectedDirectory].keys[selectedKey].subkeys[selectedSubKey].password)
+			clipboard.writeText(json.dirs[selectedDirectory].keys[selectedKey].subkeys[selectedSubKey].password)
 
 		setTimeout(function () {
 			clipboard.writeText("")
@@ -306,15 +307,15 @@ function loadIPC() {
 
 		let chars = ''
 		if (arg.min)
-		chars += min
+			chars += min
 		if (arg.maj)
-		chars += maj
+			chars += maj
 		if (arg.num)
-		chars += num
+			chars += num
 		if (arg.spa)
-		chars += spa
+			chars += spa
 		if (arg.spe)
-		chars += spe
+			chars += spe
 
 		let random = randomstring.generate({
 			length: arg.n,
@@ -327,7 +328,7 @@ function loadIPC() {
 	ipc.on('move-key', (event, arg) => {
 		let reorderedList = []
 		for (let i = 0; i < arg.length; i++)
-		reorderedList.push(json.dirs[displayedDirectory].keys[arg[i]])
+			reorderedList.push(json.dirs[displayedDirectory].keys[arg[i]])
 
 		json.dirs[displayedDirectory].keys = reorderedList
 		save(file, JSON.stringify(json), password)
@@ -338,7 +339,7 @@ function loadIPC() {
 	ipc.on('get-filename', (event, _) => {
 		fs.readFile(homedir + '/path', 'utf8', function (err, data) {
 			if (err)
-			return
+				return
 
 			file = data
 			event.sender.send('filename', file.toString())
@@ -350,7 +351,7 @@ app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin')
-	app.quit()
+		app.quit()
 })
 
 app.on('activate', () => {
@@ -363,15 +364,15 @@ app.on('activate', () => {
 function login(event, file, homedir, password, callback) {
 	if (file != null) {
 		if (!fs.existsSync(homedir))
-		fs.mkdirSync(homedir)
+			fs.mkdirSync(homedir)
 
 		fs.writeFile(homedir + '/path', file.toString(), function (err) {
 			if (err)
-			return console.log(err)
+				return console.log(err)
 		})
 		load(event, file, password, function (content) {
 			if (callback != null)
-			callback(content)
+				callback(content)
 		})
 	}
 }
@@ -401,17 +402,17 @@ function save(file, data, password, callback = null) {
 	data = encrypt(data, password)
 	fs.writeFile(file.toString(), data, function (err) {
 		if (err)
-		return console.log(err)
+			return console.log(err)
 
 		if (callback != null)
-		callback()
+			callback()
 	})
 }
 
 function load(event, file, password, callback) {
 	fs.readFile(file.toString(), 'utf8', function (err, data) {
 		if (err)
-		return console.log(err)
+			return console.log(err)
 
 		try {
 			data = decrypt(data, password)

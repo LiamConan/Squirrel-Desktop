@@ -16,12 +16,13 @@
     "url": "git://github.com/username/repository.git"
   },
   "devDependencies": {
-    "electron": "^4.0.5"
+    "electron": "^8.0.2"
   },
   "ember-electron": {
     "icon": "res/squirrel.ico"
   },
   "dependencies": {
+    "@types/jquery": "^3.3.33",
     "aes-cross": "^1.0.9",
     "copy-to-clipboard": "^3.0.8",
     "electron-packager": "^14.1.1",

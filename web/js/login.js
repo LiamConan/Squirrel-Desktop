@@ -1,60 +1,46 @@
-$(function()
-{
+$(function () {
 	const electron = require('electron');
 	const ipc = electron.ipcRenderer;
 
-	var app = electron.remote;
-	var fs = require('fs');
-
-	$('#buttonFile').click(function()
-	{
+	$('#buttonFile').on('click', function () {
 		ipc.send('choose-file');
 	});
 
-	$('#buttonNewFile').click(function()
-	{
+	$('#buttonNewFile').on('click', function () {
 		ipc.send('new-file');
 	});
 
-	$('#editTextFile').click(function()
-	{
+	$('#editTextFile').on('click', function () {
 		ipc.send('choose-file');
 	});
 
-	$('#buttonSubmit').click(function() {
-		ipc.send('login', $('#editTextPassword').val());
-
-		app.getCurrentWindow().loadURL('../html/home.html');
+	$('#buttonSubmit').on('click', function () {
+		ipc.send('login', $('#editTextPassword').val())
 	});
 
 	$("#editTextPassword").on('keyup', function (e) {
-		if (e.keyCode == 13)
-		{
-			ipc.send('login', $(this).val());
-
-			app.getCurrentWindow().loadURL('../html/home.html');
+		if (e.key === 'Enter') {
+			ipc.send('login', $(this).val())
 		}
 	});
 
-	ipc.on('filename',  (event, arg) =>
-	{
-		console.log(arg);
+	ipc.on('filename', (event, arg) => {
 		$('#editTextFile').val(arg);
 	});
 
-	ipc.on('error',  (event, arg) =>
-	{
-		if(arg == 'password')
+	ipc.on('error', (event, arg) => {
+		if (arg === 'password')
 			setErrorOnPassword();
 	});
 
 	ipc.send('get-filename');
 });
 
-function setErrorOnPassword()
-{
-	$('#editTextPassword').css('border', '2px solid #ce4540');
-	setTimeout(function() {
-		$('#editTextPassword').css('border', '1px solid #353B45');
+function setErrorOnPassword() {
+	const editTextPassword = $('#editTextPassword')
+
+	editTextPassword.css('border', '2px solid #ce4540');
+	setTimeout(function () {
+		editTextPassword.css('border', '1px solid #353B45');
 	}, 2000);
 }
