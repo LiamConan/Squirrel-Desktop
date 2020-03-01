@@ -165,7 +165,7 @@ function loadIPC() {
 		subkeys = json.dirs[displayedDirectory].keys[arg].subkeys
 		let i = 0
 
-		while (subkeys[i].url === '' && i < subkeys.lenght)
+		while (subkeys[i].url === '' && i < subkeys.length)
 		i++
 		let url = subkeys[i].url
 
@@ -203,7 +203,7 @@ function loadIPC() {
 
 	ipc.on('close-right-pan', (event) => {
 		if (creatingSubKey !== -1) {
-			deleteSubKey(json, displayedDirectory, selectedDirectory, selectedKey, selectedSubKey, event, function () {
+			deleteSubKey(json, displayedDirectory, selectedDirectory, event, function () {
 				creatingKey = -1
 				creatingSubKey = -1
 				save(file, JSON.stringify(json), password)
@@ -277,7 +277,7 @@ function loadIPC() {
 	})
 
 	ipc.on('del-user', (event, _) => {
-		deleteSubKey(json, displayedDirectory, selectedDirectory, selectedKey, selectedSubKey, event, function () {
+		deleteSubKey(json, displayedDirectory, selectedDirectory, event, function () {
 			creatingKey = -1
 			creatingSubKey = -1
 			save(file, JSON.stringify(json), password)
@@ -376,7 +376,7 @@ function login(event, file, homedir, password, callback) {
 	}
 }
 
-function deleteSubKey(data, displayedDir, selectedDir, selectedKey, selectedSubKey, event, callback) {
+function deleteSubKey(data, displayedDir, selectedDir, event, callback) {
 	data.dirs[selectedDir].keys[selectedKey].subkeys.splice(selectedSubKey, 1)
 
 	if (data.dirs[selectedDir].keys[selectedKey].subkeys.length <= 0) {
@@ -434,11 +434,11 @@ function decrypt(data, password) {
 }
 
 function encrypt(data, password) {
-	var hashedPassword = crypto.createHash('md5').update(new Buffer(password)).digest("hex").substring(0, 16)
-	var iv = crypto.createHash('sha1').update(hashedPassword).digest("hex").substring(0, 16)
+	let hashedPassword = crypto.createHash('md5').update(new Buffer(password)).digest("hex").substring(0, 16)
+	let iv = crypto.createHash('sha1').update(hashedPassword).digest("hex").substring(0, 16)
 
-	var cipher = crypto.createCipheriv('aes-128-cbc', hashedPassword, iv)
-	var crypted = cipher.update(data, 'utf8', 'base64')
+	let cipher = crypto.createCipheriv('aes-128-cbc', hashedPassword, iv)
+	let crypted = cipher.update(data, 'utf8', 'base64')
 	crypted += cipher.final('base64')
 	return crypted
 }

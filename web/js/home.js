@@ -62,7 +62,7 @@ $(function () {
 		if (data.dirs.length > 0)
 			showKeys(data.dirs[0].keys);
 
-		$('#add_dir').on('click', function () {
+		$('#add_dir').click(function () {
 			onAddDirectory();
 		});
 
@@ -71,25 +71,25 @@ $(function () {
 				onAddDirectory();
 		});
 
-		$('#add_key').on('click', function () {
+		$('#add_key').click(function () {
 			onAddKey();
 		});
 
-		$('#editTextNewKey').on('keyup', function (e) {
+		$('#editTextNewKey').keyup(function (e) {
 			if (e.code === 13)
 				onAddKey();
 		});
 
-		$('#add-user').on('click', function () {
+		$('#add-user').click(function () {
 			onAddUser();
 		});
 
-		$('#del-user').on('click', function () {
+		$('#del-user').click(function () {
 			deleteSubKey = true;
 			openDeleteKeyModal();
 		});
 
-		$('#key_save').on('click', function () {
+		$('#key_save').click(function () {
 			let title = $('#key_title').val()
 			let user = $('#user').val()
 			let email = $('#mail').val()
@@ -119,30 +119,30 @@ $(function () {
 			}
 		});
 
-		$('#key_close').on('click', function () {
+		$('#key_close').click(function () {
 			ipc.send('close-right-pan');
 		});
 
-		$('#copy_username').on('click', function () {
+		$('#copy_username').click(function () {
 			ipc.send('copy', 'username');
 			$('#copied').slideDown(500).delay(1000).slideUp(500)
 		});
 
-		$('#copy_mail').on('click', function () {
+		$('#copy_mail').click(function () {
 			ipc.send('copy', 'mail');
 			$('#copied').slideDown(500).delay(1000).slideUp(500)
 		});
 
-		$('#copy_password').on('click', function () {
+		$('#copy_password').click(function () {
 			ipc.send('copy', 'password');
 			$('#copied').slideDown(500).delay(1000).slideUp(500)
 		});
 
-		$('#copy_url').on('click', function () {
+		$('#copy_url').click(function () {
 			ipc.send('go-to-url');
 		});
 
-		$('#generate-password').on('click', function () {
+		$('#generate-password').click(function () {
 			let n = $('#nb-charac').val()
 			let min = $('#check-min').is(':checked');
 			let maj = $('#check-maj').is(':checked');
@@ -168,12 +168,12 @@ $(function () {
 			}
 		});
 
-		$('#validate-hash').on('click', function () {
+		$('#validate-hash').click(function () {
 			$('#password').val($('#edittext-generated-pass').val());
 			closePasswordGeneratorModal();
 		});
 
-		$('#cancel-hash').on('click', closePasswordGeneratorModal);
+		$('#cancel-hash').click(closePasswordGeneratorModal);
 
 		$("#keys").sortable({
 			group: 'no-drop',
@@ -193,16 +193,16 @@ $(function () {
 			}
 		});
 
-		$('#confirmRename').on('click', function () {
+		$('#confirmRename').click(function () {
 			$('#modalRename').modal('hide');
 			onRenameDir($('#editTextreNewName').val());
 		});
 
-		$('#cancelRename').on('click', function () {
+		$('#cancelRename').click(function () {
 			$('#modalRename').modal('hide');
 		});
 
-		$('#confirmDelete').on('click', function () {
+		$('#confirmDelete').click(function () {
 			if (dirIDToDelete !== -1) {
 				ipc.send('del-dir', dirIDToDelete);
 				dirIDToDelete = -1;
@@ -214,25 +214,23 @@ $(function () {
 			}
 		});
 
-		$('#cancelDelete').on('click', function () {
+		$('#cancelDelete').click(function () {
 			dirIDToDelete = -1;
 			keyIDToDelete = -1;
 		});
 	}
 
 	function showDirectories(dirs) {
-		let directories = $('#list_dirs')
-		directories.empty();
-		let directoryItem = $('.dir_title')
+		$('#list_dirs').empty();
 
 		for (let i = 0; i < dirs.length; i++)
-			directories.append('<li><div class="dir_title ' + i + '">' + dirs[i].name + '</div></li>');
+			$('#list_dirs').append('<li><div class="dir_title ' + i + '">' + dirs[i].name + '</div></li>');
 
-		directoryItem.on('click', function () {
+		$('.dir_title').click(function () {
 			ipc.send('select-dir', $(this).attr('class').split(' ')[1]);
 		});
 
-		directoryItem.contextmenu(function () {
+		$('.dir_title').contextmenu(function () {
 			event.preventDefault();
 			const template = [
 				{
@@ -261,9 +259,7 @@ $(function () {
 	}
 
 	function showKeys(keys) {
-		let keyItem = $('.key')
-		let keysItem = $('#keys')
-		keysItem.empty();
+		$('#keys').empty();
 
 		for (let i = 0; i < keys.length; i++) {
 			let keyHTML = '';
@@ -281,19 +277,18 @@ $(function () {
 				keyHTML += '</li></ol>';
 
 
-			keysItem.append(keyHTML);
+			$('#keys').append(keyHTML);
 		}
 
-		keyItem.on('click', function () {
-			console.log()
+		$('.key').click(function () {
 			if (ctrl) {
 				ctrl = false;
 				ipc.send('go-to-url', $(this).attr('class').split(' ')[1]);
 			} else
 				ipc.send('get-key', $(this).attr('class').split(' ')[1]);
-		});
+		})
 
-		keyItem.contextmenu(function () {
+		$('.key').contextmenu(function () {
 			event.preventDefault();
 			const template = [
 				{
@@ -325,13 +320,12 @@ $(function () {
 	}
 
 	function fillRightPan(key) {
-		let dropdown = $('#dropdown-user')
 		let subkeys = key.subkeys;
-		dropdown.empty();
+		$('#dropdown-user').empty();
 		for (let i = 0; i < subkeys.length; i++)
-			dropdown.append('<a class="dropdown-item ' + i + '" href="#">' + subkeys[i].user + '</a>');
+			$('#dropdown-user').append('<a class="dropdown-item ' + i + '" href="#">' + subkeys[i].user + '</a>');
 
-		$('.dropdown-item').on('click', function () {
+		$('.dropdown-item').click(function () {
 			ipc.send('get-subkey', $(this).attr('class').split(' ')[1]);
 		});
 
@@ -366,11 +360,10 @@ $(function () {
 	}
 
 	function onAddKey() {
-		let editText = $('#editTextNewKey')
-		if (editText.val() !== "")
-			ipc.send('add-key', editText.val());
+		if ($('#editTextNewKey').val() !== "")
+			ipc.send('add-key', $('#editTextNewKey').val());
 
-		editText.val('');
+		$('#editTextNewKey').val('');
 	}
 
 	function onAddUser() {
@@ -405,14 +398,12 @@ $(function () {
 	}
 
 	function openDeleteKeyModal() {
-		let modal = $("#modalConfirmDelete")
-		modal.find('.modal-body p').text('Voulez-vous supprimer la clé ?');
-		modal.modal();
+		$("#modalConfirmDelete").find('.modal-body p').text('Voulez-vous supprimer la clé ?');
+		$("#modalConfirmDelete").modal();
 	}
 
 	function openDeleteDirModal() {
-		let modal = $("#modalConfirmDelete")
-		modal.find('.modal-body p').text('Voulez-vous supprimer le dossier ?');
-		modal.modal();
+		$("#modalConfirmDelete").find('.modal-body p').text('Voulez-vous supprimer le dossier ?');
+		$("#modalConfirmDelete").modal();
 	}
 });
