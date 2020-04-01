@@ -58,27 +58,26 @@ function createWindow() {
 function loadIPC() {
 
 	ipc.on('choose-file', (event, _) => {
-		dialog.showOpenDialog(window, function (filename) {
+		dialog.showOpenDialog(window).then((filename) => {
 			if (filename === undefined)
 				return
 
-			file = filename
-			event.sender.send('filename', filename.toString())
+			file = filename.filePaths[0]
+			event.sender.send('filename', filename.filePaths[0])
 		})
 	})
 
 	ipc.on('new-file', (event, _) => {
 		dialog.showSaveDialog(window, {
-				title: 'Nouveau registre de clés',
-				filters: [{name: 'Fichiers squirrel', extensions: ['sq']}]
-			},
-			(filename) => {
-				if (filename === undefined)
-					return
-				createFile = true
-				file = filename
-				event.sender.send('filename', filename.toString())
-			})
+			title: 'Nouveau registre de clés',
+			filters: [{name: 'Fichiers squirrel', extensions: ['sq']}]
+		}).then((filename) => {
+			if (filename === undefined)
+				return
+			createFile = true
+			file = filename.filePath
+			event.sender.send('filename', filename.filePath)
+		})
 	})
 
 	ipc.on('login', (event, arg) => {
@@ -89,7 +88,7 @@ function loadIPC() {
 			save(file, JSON.stringify({"dirs": []}), password, function () {
 				login(event, file, homedir, password, function (content) {
 					json = content
-					window.loadURL(renderPath + 'home.html')
+					window.loadURL(renderPath + 'home.html').then()
 					window.resizable = true
 					window.maximize()
 				})
@@ -97,7 +96,7 @@ function loadIPC() {
 		} else
 			login(event, file, homedir, password, function (content) {
 				json = content
-				window.loadURL(renderPath + 'home.html')
+				window.loadURL(renderPath + 'home.html').then()
 				window.resizable = true
 				window.maximize()
 			})
