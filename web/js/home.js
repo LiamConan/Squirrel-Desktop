@@ -57,27 +57,43 @@ $(function () {
 	ipc.send('get-data');
 
 	function loadInterface(data) {
-		showDirectories(data.dirs);
+		showDirectories(data.dirs)
 
 		if (data.dirs.length > 0)
-			showKeys(data.dirs[0].keys);
+			showKeys(data.dirs[0].keys)
+
+		$('#validate-change-password').on('click', function () {
+			if ($('#actual_password').val() === $('#new_password').val())
+				$('#alert-old-new-passwords-equal').slideDown(500).delay(2000).slideUp(500)
+			else if ($('#new_password').val() !== $('#confirmation_password').val()) {
+				$('#alert-confirmation-not-match').slideDown(500).delay(2000).slideUp(500)
+			} else {
+				ipc.send('change-password', {
+					'actual': $('#actual_password').val(),
+					'new': $('#new_password').val()
+				});
+				closeChangePasswordModal()
+			}
+		});
+
+		$('#cancel-change-password').on('click', closeChangePasswordModal);
 
 		$('#add_dir').on('click', function () {
-			onAddDirectory();
+			onAddDirectory()
 		});
 
 		$("#editTextNewDir").on('keyup', function (e) {
 			if (e.key === 'Enter')
-				onAddDirectory();
+				onAddDirectory()
 		});
 
 		$('#add_key').on('click', function () {
-			onAddKey();
+			onAddKey()
 		});
 
 		$('#editTextNewKey').on('keyup', function (e) {
 			if (e.key === 'Enter')
-				onAddKey();
+				onAddKey()
 		});
 
 		$('#add-user').on('click', function () {
@@ -375,6 +391,13 @@ $(function () {
 		setTimeout(function () {
 			$('#' + field + '').css('border', '1px solid #353B45');
 		}, 2000);
+	}
+
+	function closeChangePasswordModal() {
+		$('#modalChangePassword').modal('hide');
+		$('#actual_password').val('')
+		$('#new_password').val('')
+		$('#confirmation_password').val('')
 	}
 
 	function closePasswordGeneratorModal() {

@@ -107,6 +107,17 @@ function loadIPC() {
 		event.sender.send('select-dir', displayedDirectory)
 	})
 
+	ipc.on('change-password', (event, arg) => {
+		let actualPassword = arg.actual
+		let newPassword = arg.new
+
+		load(event, file, actualPassword, function (content) {
+			save(file, JSON.stringify(json), newPassword, () => {
+				password = newPassword
+			})
+		})
+	})
+
 	ipc.on('add-dir', (event, arg) => {
 		json.dirs.push({"name": arg, "keys": []})
 		event.sender.send('send-dirs', json.dirs)
