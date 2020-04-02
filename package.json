@@ -2,7 +2,7 @@
   "name": "squirrel",
   "version": "1.0.0",
   "description": "Un keypass au design original",
-  "main": "main.js",
+  "main": "src/app/framework/main.js",
   "scripts": {
     "start": "electron .",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=res/squirrel.icns --prune=true --out=release-builds",

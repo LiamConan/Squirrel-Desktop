@@ -284,7 +284,7 @@ $(function () {
 				keyHTML += '<li><ol>';
 
 			keyHTML += '<li class="key ' + i + '">' +
-				'<img class="icon_drag" src="../../res/menu.svg"/>' +
+				'<img class="icon_drag" src="../../../../assets/img/menu.svg"/>' +
 				'<div class="keys_title">' + keys[i].name + '</div>' +
 				'<div class="date">' + keys[i].date + '</div>' +
 				'</li>';

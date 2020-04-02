@@ -11,7 +11,7 @@ const ipc = electron.ipcMain
 const homedir = require('os').homedir();
 
 let window
-let renderPath = `file://${__dirname}/web/html/`
+let renderPath = `file://${__dirname}/../view/`
 let password = null
 let createFile = false
 let file
@@ -29,7 +29,7 @@ function createWindow() {
 	window = new BrowserWindow({
 		width: 800,
 		height: 175,
-		icon: path.join(__dirname, 'res/squirrel.png'),
+		icon: path.join(__dirname, 'assets/squirrel.png'),
 		backgroundColor: '#313440',
 		webPreferences: {
 			nodeIntegration: true
@@ -37,7 +37,7 @@ function createWindow() {
 		resizable: false
 	})
 	window.setMenu(null)
-	window.loadURL(renderPath + 'login.html').then()
+	window.loadURL(renderPath + 'login/login.html').then()
 	window.on('closed', () => {
 		if (creatingKey !== -1) {
 			json.dirs[displayedDirectory].keys.splice(creatingKey, 1)
@@ -88,7 +88,7 @@ function loadIPC() {
 			save(file, JSON.stringify({"dirs": []}), password, function () {
 				login(event, file, homedir, password, function (content) {
 					json = content
-					window.loadURL(renderPath + 'home.html').then()
+					window.loadURL(renderPath + 'home/home.html').then()
 					window.resizable = true
 					window.maximize()
 				})
@@ -96,7 +96,7 @@ function loadIPC() {
 		} else
 			login(event, file, homedir, password, function (content) {
 				json = content
-				window.loadURL(renderPath + 'home.html').then()
+				window.loadURL(renderPath + 'home/home.html').then()
 				window.resizable = true
 				window.maximize()
 			})
