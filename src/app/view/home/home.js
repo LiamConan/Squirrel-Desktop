@@ -383,7 +383,7 @@ $(function () {
 	}
 
 	function onRenameDir(name) {
-		ipc.send('rename-dir', {"name": name, "dirID": dirIDToRename});
+		ipc.send('rename-dir', {"name": name, "position": dirIDToRename});
 	}
 
 	function setErrorOn(field) {

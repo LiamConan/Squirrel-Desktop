@@ -1,9 +1,10 @@
 const fs = require('fs')
 const CryptUtil = require('../crypt-util')
+const KeysDataSource = require('../../../core/data/keys-data-source')
 
-module.exports = class LocalFileDataSource {
+module.exports = class LocalFileDataSource extends KeysDataSource{
 
-	static save(file, data, password, callback = null) {
+	save(file, data, password, callback = null) {
 		data = CryptUtil.encrypt(data, password)
 		fs.writeFile(file.toString(), data, function (err) {
 			if (err)
@@ -14,7 +15,7 @@ module.exports = class LocalFileDataSource {
 		})
 	}
 
-	static load(event, file, password, callback) {
+	load(file, password, callback) {
 		fs.readFile(file.toString(), 'utf8', function (err, content) {
 			if (err)
 				return console.log(err)
@@ -24,7 +25,7 @@ module.exports = class LocalFileDataSource {
 				let json = JSON.parse(data)
 				callback(json)
 			} catch (e) {
-				event.sender.send('error', 'password')
+				console.log("load error" + e)
 			}
 		})
 	}

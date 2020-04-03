@@ -2,12 +2,15 @@ const {dialog} = require('electron')
 const fs = require('fs')
 const homedir = require('os').homedir()
 const Controller = require('./controller')
-const LocalFileDataSource = require('./gataway/local-file-data-source')
+const KeysUseCases = require('./keys-use-cases')
+const PreferencesUseCases = require('./preferences-use-cases')
 
 class LoginController extends Controller {
 
 	static DEFAULT_DATA = JSON.stringify({"dirs": []})
 
+	_keysUseCases = new KeysUseCases()
+	_preferencesUseCases = new PreferencesUseCases()
 	_filePath
 	_isNewFile = false
 	_password = ""
@@ -20,15 +23,10 @@ class LoginController extends Controller {
 	handleEvents() {
 		super.handleEvents()
 
-
 		this._ipc.on('get-filename', (event, _) => {
-			let self = this
-			fs.readFile(homedir + '/path', 'utf8', function (err, data) {
-				if (err)
-					return
-
-				self._filePath = data
-				event.sender.send('filename', self._filePath.toString())
+			this._preferencesUseCases.getPreferences((data) => {
+				this._filePath = data.filePath
+				event.sender.send('filename', this._filePath.toString())
 			})
 		})
 
@@ -49,6 +47,7 @@ class LoginController extends Controller {
 			}).then((filename) => {
 				if (filename === undefined)
 					return
+
 				this._isNewFile = true
 				this._filePath = filename.filePath
 				event.sender.send('filename', filename.filePath)
@@ -60,7 +59,7 @@ class LoginController extends Controller {
 			this._password = arg
 			if (this._isNewFile) {
 				this._isNewFile = false
-				LocalFileDataSource.save(this._filePath, LoginController.DEFAULT_DATA, this._password, function () {
+				this._keysUseCases.save(this._filePath, LoginController.DEFAULT_DATA, this._password, function () {
 					self.login(event, self._filePath, self._password, function (content) {
 						this.loadController('home/home.html', {
 							data: content,
@@ -69,7 +68,7 @@ class LoginController extends Controller {
 						})
 					})
 				})
-			} else
+			} else {
 				this.login(event, this._filePath, this._password, function (content) {
 					self.loadController('home/home.html', {
 						data: content,
@@ -77,6 +76,7 @@ class LoginController extends Controller {
 						filePath: self._filePath
 					})
 				})
+			}
 		})
 	}
 
@@ -85,11 +85,10 @@ class LoginController extends Controller {
 			if (!fs.existsSync(homedir))
 				fs.mkdirSync(homedir)
 
-			fs.writeFile(homedir + '/path', file.toString(), function (err) {
-				if (err)
-					return console.log(err)
+			this._preferencesUseCases.savePreferences({
+				'filePath': file.toString()
 			})
-			LocalFileDataSource.load(event, file, password, function (content) {
+			this._keysUseCases.load(file, password, function (content) {
 				if (callback != null)
 					callback(content)
 			})
