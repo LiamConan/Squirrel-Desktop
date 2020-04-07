@@ -1,7 +1,7 @@
 const randomstring = require("randomstring")
 const Controller = require('./controller')
-const KeysUseCases = require('./keys-use-cases')
-const PasswordUseCases = require('./usecases/password-use-cases')
+const KeysUseCases = require('./interactor/keys-interactor')
+const PasswordUseCases = require('./interactor/password-interactor')
 
 class HomeController extends Controller {
 

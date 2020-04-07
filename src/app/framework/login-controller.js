@@ -2,7 +2,7 @@ const {dialog} = require('electron')
 const fs = require('fs')
 const homedir = require('os').homedir()
 const Controller = require('./controller')
-const KeysUseCases = require('./keys-use-cases')
+const KeysUseCases = require('./interactor/keys-interactor')
 const PreferencesUseCases = require('./preferences-use-cases')
 
 class LoginController extends Controller {
