@@ -234,6 +234,16 @@ $(function () {
 			dirIDToDelete = -1;
 			keyIDToDelete = -1;
 		});
+
+		$("#eye-toggle").on('click', () => {
+			if ($("#password").attr('type') === 'password') {
+				$("#password").prop('type', 'text')
+				$("#eye-icon").prop('src', '../../../../assets/img/eye-off.svg')
+			} else {
+				$("#password").prop('type', 'password')
+				$("#eye-icon").prop('src', '../../../../assets/img/eye.svg')
+			}
+		})
 	}
 
 	function showDirectories(dirs) {

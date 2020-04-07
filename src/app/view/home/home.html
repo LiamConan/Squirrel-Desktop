@@ -1,265 +1,271 @@
 <!doctype html>
 <html lang="fr">
 <head>
-    <meta charset="utf-8">
-    <title>Squirrel</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link href="../../../../assets/font/roboto.css" rel="stylesheet">
-    <link rel="stylesheet" href="home.css">
-    <link rel="icon" href="../../../../assets/img/squirrel.png"/>
+	<meta charset="utf-8">
+	<title>Squirrel</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link href="../../../../assets/font/roboto.css" rel="stylesheet">
+	<link rel="stylesheet" href="home.css">
+	<link rel="icon" href="../../../../assets/img/squirrel.png"/>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"
-            onload="window.$ = window.jQuery = module.exports;"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="home.js" charset="utf-8"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"
+			onload="window.$ = window.jQuery = module.exports;"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script src="home.js" charset="utf-8"></script>
 </head>
 <body>
 <div class="modal fade" id="modalGenerateHash" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Générer un mot de passe</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div id="fill_form" class="alert alert-danger" role="alert">Veuillez indiquer un nombre de charactères
-                </div>
-                <div id="check_one_at_least" class="alert alert-danger" role="alert">Veuillez cocher au moins une case
-                </div>
-                <div id="too_long_number" class="alert alert-danger" role="alert">Trop de charactères pour un mot de
-                    passe
-                </div>
-                <form>
-                    <div class="form-group">
-                        <input id="nb-charac" type="number" class="form-control" placeholder="Nombre de caractères">
-                    </div>
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input type="checkbox" id="check-min" class="form-check-input" checked>
-                            Minuscules
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input type="checkbox" id="check-maj" class="form-check-input" checked>
-                            Majuscules
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input type="checkbox" id="check-num" class="form-check-input">
-                            Nombres
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input type="checkbox" id="check-spa" class="form-check-input">
-                            Espaces
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input type="checkbox" id="check-spe" class="form-check-input">
-                            Spéciaux (!, $, %)
-                        </label>
-                    </div>
-                </form>
-                <div class="form-group">
-                    <button type="button" id="generate-password" class="btn btn-primary">Générer</button>
-                    <input type="text" id="edittext-generated-pass" class="form-control">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="cancel-hash" type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                <button id="validate-hash" type="button" class="btn btn-primary">Valider</button>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Générer un mot de passe</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div id="fill_form" class="alert alert-danger" role="alert">Veuillez indiquer un nombre de charactères
+				</div>
+				<div id="check_one_at_least" class="alert alert-danger" role="alert">Veuillez cocher au moins une case
+				</div>
+				<div id="too_long_number" class="alert alert-danger" role="alert">Trop de charactères pour un mot de
+					passe
+				</div>
+				<form>
+					<div class="form-group">
+						<input id="nb-charac" type="number" class="form-control" placeholder="Nombre de caractères">
+					</div>
+					<div class="form-check">
+						<label class="form-check-label">
+							<input type="checkbox" id="check-min" class="form-check-input" checked>
+							Minuscules
+						</label>
+					</div>
+					<div class="form-check">
+						<label class="form-check-label">
+							<input type="checkbox" id="check-maj" class="form-check-input" checked>
+							Majuscules
+						</label>
+					</div>
+					<div class="form-check">
+						<label class="form-check-label">
+							<input type="checkbox" id="check-num" class="form-check-input">
+							Nombres
+						</label>
+					</div>
+					<div class="form-check">
+						<label class="form-check-label">
+							<input type="checkbox" id="check-spa" class="form-check-input">
+							Espaces
+						</label>
+					</div>
+					<div class="form-check">
+						<label class="form-check-label">
+							<input type="checkbox" id="check-spe" class="form-check-input">
+							Spéciaux (!, $, %)
+						</label>
+					</div>
+				</form>
+				<div class="form-group">
+					<button type="button" id="generate-password" class="btn btn-primary">Générer</button>
+					<input type="text" id="edittext-generated-pass" class="form-control">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button id="cancel-hash" type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+				<button id="validate-hash" type="button" class="btn btn-primary">Valider</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="modalChangePassword" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Changer le mot de passe du fichier</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div id="alert-old-new-passwords-equal" class="alert alert-danger" role="alert">
-                    Le nouveau mot de passe doit être différent de l'ancien
-                </div>
-                <div id="alert-confirmation-not-match" class="alert alert-danger" role="alert">
-                    La confirmation doit être identique au nouveau mot de passe
-                </div>
-                <form>
-                    <div class="form-group">
-                        <input id="actual_password"
-                               class="form-control"
-                               type="password"
-                               placeholder="Mot de passe actuel"
-                               required>
-                    </div>
-                    <div class="form-group">
-                        <input id="new_password"
-                               type="password"
-                               class="form-control"
-                               placeholder="Nouveau mot de passe"
-                               required>
-                    </div>
-                    <div class="form-group">
-                        <input id="confirmation_password"
-                               type="password"
-                               class="form-control"
-                               placeholder="Confirmation"
-                               required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button id="cancel-change-password" type="button" class="btn btn-secondary" data-dismiss="modal">
-                    Annuler
-                </button>
-                <button id="validate-change-password" type="button" class="btn btn-primary">Valider</button>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Changer le mot de passe du fichier</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div id="alert-old-new-passwords-equal" class="alert alert-danger" role="alert">
+					Le nouveau mot de passe doit être différent de l'ancien
+				</div>
+				<div id="alert-confirmation-not-match" class="alert alert-danger" role="alert">
+					La confirmation doit être identique au nouveau mot de passe
+				</div>
+				<form>
+					<div class="form-group">
+						<input id="actual_password"
+							   class="form-control"
+							   type="password"
+							   placeholder="Mot de passe actuel"
+							   required>
+					</div>
+					<div class="form-group">
+						<input id="new_password"
+							   type="password"
+							   class="form-control"
+							   placeholder="Nouveau mot de passe"
+							   required>
+					</div>
+					<div class="form-group">
+						<input id="confirmation_password"
+							   type="password"
+							   class="form-control"
+							   placeholder="Confirmation"
+							   required>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button id="cancel-change-password" type="button" class="btn btn-secondary" data-dismiss="modal">
+					Annuler
+				</button>
+				<button id="validate-change-password" type="button" class="btn btn-primary">Valider</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="modalRename" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Renommer</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <input id="editTextreNewName" type="text" class="form-control" placeholder="Nouveau nom">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button id="confirmRename" type="button" class="btn btn-success" data-dismiss="modal">Renommer</button>
-                <button id="cancelRename" type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Renommer</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<input id="editTextreNewName" type="text" class="form-control" placeholder="Nouveau nom">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button id="confirmRename" type="button" class="btn btn-success" data-dismiss="modal">Renommer</button>
+				<button id="cancelRename" type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="modalConfirmDelete" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Supression</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p></p>
-            </div>
-            <div class="modal-footer">
-                <button id="confirmDelete" type="button" class="btn btn-danger" data-dismiss="modal">Supprimer</button>
-                <button id="cancelDelete" type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Supression</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p></p>
+			</div>
+			<div class="modal-footer">
+				<button id="confirmDelete" type="button" class="btn btn-danger" data-dismiss="modal">Supprimer</button>
+				<button id="cancelDelete" type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 
 <div id="left_pan">
-    <h2>Dossiers</h2>
+	<h2>Dossiers</h2>
 
-    <div id="dirs">
-        <ul id="list_dirs">
-        </ul>
-    </div>
-    <div id="change_password_btn" class="btn btn-primary" data-toggle="modal" data-target="#modalChangePassword">
-        <div>Changer le mot de passe</div>
-    </div>
-    <div id="block-new_dir">
-        <input id="editTextNewDir" type="text" class="form-control" placeholder="Nouveau dossier">
-        <div id="add_dir" class="btn btn-primary"><img src="../../../../assets/img/plus.svg"/></div>
-    </div>
+	<div id="dirs">
+		<ul id="list_dirs">
+		</ul>
+	</div>
+	<div id="change_password_btn" class="btn btn-primary" data-toggle="modal" data-target="#modalChangePassword">
+		<div>Changer le mot de passe</div>
+	</div>
+	<div id="block-new_dir">
+		<input id="editTextNewDir" type="text" class="form-control" placeholder="Nouveau dossier">
+		<div id="add_dir" class="btn btn-primary"><img src="../../../../assets/img/plus.svg"/></div>
+	</div>
 </div>
 
 <div id="main_frame_margin_left"></div>
 
 <section id="main_frame">
 
-    <div id="list_frame">
-        <div id="no_url" class="alert alert-danger" role="alert">Aucune url à laquelle accéder.</div>
-        <div id="no_dir" class="alert alert-danger" role="alert">Vous devez d'abord créer un dossier</div>
-        <div id="list">
-            <ol id="keys">
-            </ol>
-        </div>
-        <div id="block-new_key">
-            <input id="editTextNewKey" type="text" class="form-control" placeholder="Nouvelle clé">
-            <div id="add_key" class="btn btn-primary"><img src="../../../../assets/img/plus.svg"/></div>
-        </div>
-    </div>
+	<div id="list_frame">
+		<div id="no_url" class="alert alert-danger" role="alert">Aucune url à laquelle accéder.</div>
+		<div id="no_dir" class="alert alert-danger" role="alert">Vous devez d'abord créer un dossier</div>
+		<div id="list">
+			<ol id="keys">
+			</ol>
+		</div>
+		<div id="block-new_key">
+			<input id="editTextNewKey" type="text" class="form-control" placeholder="Nouvelle clé">
+			<div id="add_key" class="btn btn-primary"><img src="../../../../assets/img/plus.svg"/></div>
+		</div>
+	</div>
 
-    <div id="key">
-        <div id="key_close"><img src="../../../../assets/img/arrow-collapse-right.svg"/></div>
-        <div id="save_key" class="alert alert-danger" role="alert">Veuillez sauvegarder la clé.</div>
-        <div class="dropdown show">
-            <button id="add-user" type="button" class="btn btn-primary">Nouvel utilisateur</button>
-            <a class="btn btn-primary dropdown-toggle dropdown-toggle-split" href="#" role="button"
-               id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="sr-only"></span>
-            </a>
-            <button id="del-user" type="button" class="btn btn-danger"><img src="../../../../assets/img/delete.svg"/></button>
+	<div id="key">
+		<div id="key_close"><img src="../../../../assets/img/arrow-collapse-right.svg"/></div>
+		<div id="save_key" class="alert alert-danger" role="alert">Veuillez sauvegarder la clé.</div>
+		<div class="dropdown show">
+			<button id="add-user" type="button" class="btn btn-primary">Nouvel utilisateur</button>
+			<a class="btn btn-primary dropdown-toggle dropdown-toggle-split" href="#" role="button"
+			   id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<span class="sr-only"></span>
+			</a>
+			<button id="del-user" type="button" class="btn btn-danger"><img src="../../../../assets/img/delete.svg"/>
+			</button>
 
-            <div id="dropdown-user" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            </div>
-        </div>
-        <input id="key_title" type="text" class="form-control" placeholder="Titre">
-        <div id="key_save" class="btn btn-success"><img src="../../../../assets/img/save.svg"/></div>
-        <form>
-            <div class="form-group">
-                <input id="user" type="text" class="form-control" placeholder="Identifiant">
-                <div id="copy_username" class="btn btn-primary"><img src="../../../../assets/img/clipboard.svg"/></div>
-            </div>
-            <div class="form-group">
-                <input id="mail" type="text" class="form-control" placeholder="Email">
-                <div id="copy_mail" class="btn btn-primary"><img src="../../../../assets/img/clipboard.svg"/></div>
-            </div>
-            <div class="form-group">
-                <input id="password" type="password" class="form-control" placeholder="Mot de passe">
-                <div id="generate_password"
-                     class="btn btn-primary"
-                     data-toggle="modal"
-                     data-target="#modalGenerateHash">
-                    <img src="../../../../assets/img/key.svg"/>
-                </div>
-            </div>
-            <input id="date" type="hidden">
-            <div class="form-group">
-                <input id="url" type="text" class="form-control" placeholder="url">
-                <div id="copy_url" class="btn btn-primary"><img src="../../../../assets/img/chrome.svg"/></div>
-            </div>
-            <div class="form-group">
-                <textarea id="note" class="form-control" placeholder="Notes" rows="4"></textarea>
-            </div>
-            <div class="form-group">
-                <div id="copy_password" class="btn btn-primary">
-                    <div id="btn-text">Copier le mot de passe</div>
-                </div>
-            </div>
-        </form>
+			<div id="dropdown-user" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+			</div>
+		</div>
+		<input id="key_title" type="text" class="form-control" placeholder="Titre">
+		<div id="key_save" class="btn btn-success"><img src="../../../../assets/img/save.svg"/></div>
+		<form>
+			<div class="form-group">
+				<input id="user" type="text" class="form-control" placeholder="Identifiant">
+				<div id="copy_username" class="btn btn-primary"><img src="../../../../assets/img/clipboard.svg"/></div>
+			</div>
+			<div class="form-group">
+				<input id="mail" type="text" class="form-control" placeholder="Email">
+				<div id="copy_mail" class="btn btn-primary"><img src="../../../../assets/img/clipboard.svg"/></div>
+			</div>
+			<div id="password-form-group" class="form-group">
+				<div id="password-group" class="input-group mb-3">
+					<input id="password" type="password" class="form-control" placeholder="Mot de passe">
+					<div class="input-group-append">
+						<button id="eye-toggle" type="button" class="btn btn-dark"><img id="eye-icon" src="../../../../assets/img/eye.svg"/></button>
+					</div>
+				</div>
+				<div id="generate_password"
+					 class="btn btn-primary"
+					 data-toggle="modal"
+					 data-target="#modalGenerateHash">
+					<img src="../../../../assets/img/key.svg"/>
+				</div>
+			</div>
+			<input id="date" type="hidden">
+			<div class="form-group">
+				<input id="url" type="text" class="form-control" placeholder="url">
+				<div id="copy_url" class="btn btn-primary"><img src="../../../../assets/img/chrome.svg"/></div>
+			</div>
+			<div class="form-group">
+				<textarea id="note" class="form-control" placeholder="Notes" rows="4"></textarea>
+			</div>
+			<div class="form-group">
+				<div id="copy_password" class="btn btn-primary">
+					<div id="btn-text">Copier le mot de passe</div>
+				</div>
+			</div>
+		</form>
 
-        <div id="copied" class="alert alert-success" role="alert">Copié ! Vous avez 10 secondes ...</div>
-    </div>
+		<div id="copied" class="alert alert-success" role="alert">Copié ! Vous avez 10 secondes ...</div>
+	</div>
 </section>
 </body>
 </html>

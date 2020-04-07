@@ -253,8 +253,17 @@ body {
     resize: none;
 }
 
-#user, #mail, #password, #url {
+#user, #mail, #url {
     display: inline-block;
+    width: calc(100% - 54px);
+}
+
+#password-form-group {
+    margin-bottom: 0;
+}
+
+#password-group {
+    display: inline-flex;
     width: calc(100% - 54px);
 }
 

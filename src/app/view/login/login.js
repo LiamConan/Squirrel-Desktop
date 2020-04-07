@@ -24,6 +24,16 @@ $(function () {
 		}
 	});
 
+	$("#eye-toggle").on('click', () => {
+		if ($("#editTextPassword").attr('type') === 'password') {
+			$("#editTextPassword").prop('type', 'text')
+			$("#eye-icon").prop('src', '../../../../assets/img/eye-off.svg')
+		} else {
+			$("#editTextPassword").prop('type', 'password')
+			$("#eye-icon").prop('src', '../../../../assets/img/eye.svg')
+		}
+	})
+
 	ipc.on('filename', (event, arg) => {
 		$('#editTextFile').val(arg);
 	});

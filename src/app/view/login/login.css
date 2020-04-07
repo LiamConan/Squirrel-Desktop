@@ -42,7 +42,7 @@ input[type=text]:focus, input[type=password]:focus, #buttonFile:focus
 
 #editTextPassword
 {
-	width: 98%;
+	width: 85%;
 }
 
 #editTextFile, #editTextPassword
