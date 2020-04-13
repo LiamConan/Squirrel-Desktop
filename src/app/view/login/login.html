@@ -3,14 +3,14 @@
 <head>
 	<meta charset="utf-8">
 	<title>Squirrel</title>
-	<link rel="stylesheet" href="../../../../assets/libs/bootstrap/bootstrap.min.css">
+	<link rel="stylesheet" href="../../../../libs/bootstrap/bootstrap.min.css">
 	<link href="../../../../assets/font/roboto.css" rel="stylesheet">
 	<link rel="stylesheet" href="login.css">
 	<link rel="icon" href="../../../../assets/img/squirrel.png"/>
 
-	<script src="../../../../assets/libs/jquery/jquery.min.js"
+	<script src="../../../../libs/jquery/jquery.min.js"
 			onload="window.$ = window.jQuery = module.exports;"></script>
-	<script src="../../../../assets/libs/bootstrap/bootstrap.min.js"></script>
+	<script src="../../../../libs/bootstrap/bootstrap.min.js"></script>
 	<script src="login.js" charset="utf-8"></script>
 </head>
 
@@ -18,7 +18,9 @@
 <form>
 	<div id="left">
 		<div class="form-group">
-			<input id="editTextFile" class="form-control" type="text"
+			<input id="editTextFile"
+				   class="form-control"
+				   type="text"
 				   placeholder="Chemin vers le fichier de mots de passes"/>
 			<div id="buttonFile" type="file" class="btn btn-primary">...</div>
 			<div id="buttonNewFile" type="file" class="btn btn-success"><img src="../../../../assets/img/plus.svg"/>
@@ -27,11 +29,15 @@
 		<div class="input-group mb-3">
 			<input id="editTextPassword" class="form-control" type="password" placeholder="Mot de passe"/>
 			<div class="input-group-append">
-				<button id="eye-toggle" type="button" class="btn btn-dark"><img id="eye-icon" src="../../../../assets/img/eye.svg"/></button>
+				<button id="eye-toggle" type="button" class="btn btn-dark">
+					<img id="eye-icon" src="../../../../assets/img/eye.svg"/>
+				</button>
 			</div>
 		</div>
 	</div>
-	<div id="buttonSubmit" class="btn btn-primary"><img src="../../../../assets/img/unlock.svg"/></div>
+	<div id="buttonSubmit" class="btn btn-primary">
+		<img src="../../../../assets/img/unlock.svg"/>
+	</div>
 </form>
 </body>
 </html>

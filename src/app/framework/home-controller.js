@@ -141,7 +141,7 @@ class HomeController extends Controller {
 
 		this._ipc.on('close-right-pan', (event) => {
 			if (this._displayState.creatingSubKey !== -1)
-				this.deleteSubKey()
+				this.deleteSubKey(event)
 			event.sender.send('close-right-pan', this._data.dirs)
 		})
 
@@ -197,7 +197,7 @@ class HomeController extends Controller {
 		})
 
 		this._ipc.on('del-user', (event, _) => {
-			this.deleteSubKey()
+			this.deleteSubKey(event)
 		})
 
 		this._ipc.on('copy', (event, arg) => {
