@@ -1,12 +1,10 @@
 const randomstring = require("randomstring")
 const Controller = require('./controller')
-const KeysUseCases = require('./interactor/keys-interactor')
-const PasswordUseCases = require('./interactor/password-interactor')
+const KeysInteractor = require('./interactor/keys-interactor')
 
 class HomeController extends Controller {
 
-	_keysUseCases = new KeysUseCases()
-	_passwordUseCases = new PasswordUseCases()
+	_keysInteractor = new KeysInteractor()
 	_displayState = {
 		directory: 0,
 		isKeyBeingCreated: false,
@@ -40,20 +38,20 @@ class HomeController extends Controller {
 		this._ipc.on('change-password', (event, arg) => {
 			let self = this
 
-			this._keysUseCases.changePassword(this._filePath, this._data, arg.actual, arg.new, function () {
+			this._keysInteractor.changePassword(this._filePath, this._data, arg.actual, arg.new, function () {
 				self._password = arg.new
 			})
 		})
 
 		this._ipc.on('add-dir', (event, arg) => {
-			this._keysUseCases.addDirectory(this._data, arg)
+			this._keysInteractor.addDirectory(this._data, arg)
 			event.sender.send('send-dirs', this._data.dirs)
 
-			this._keysUseCases.save(this._filePath, JSON.stringify(this._data), this._password)
+			this._keysInteractor.save(this._filePath, JSON.stringify(this._data), this._password)
 		})
 
 		this._ipc.on('del-dir', (event, arg) => {
-			this._keysUseCases.deleteDirectory(this._data, arg)
+			this._keysInteractor.deleteDirectory(this._data, arg)
 
 			event.sender.send('send-dirs', this._data.dirs)
 			if (this._displayState.directory === arg && this._data.dirs.length > 0) {
@@ -62,15 +60,15 @@ class HomeController extends Controller {
 			}
 			event.sender.send('select-dir', this._displayState.directory)
 
-			this._keysUseCases.save(this._filePath, JSON.stringify(this._data), this._password)
+			this._keysInteractor.save(this._filePath, JSON.stringify(this._data), this._password)
 		})
 
 		this._ipc.on('rename-dir', (event, arg) => {
-			this._keysUseCases.renameDirectory(this._data, arg.position, arg.name)
+			this._keysInteractor.renameDirectory(this._data, arg.position, arg.name)
 
 			event.sender.send('send-dirs', this._data.dirs)
 
-			this._keysUseCases.save(this._filePath, JSON.stringify(this._data), this._password)
+			this._keysInteractor.save(this._filePath, JSON.stringify(this._data), this._password)
 		})
 
 		this._ipc.on('select-dir', (event, arg) => {
@@ -87,7 +85,7 @@ class HomeController extends Controller {
 
 		this._ipc.on('get-key', (event, arg) => {
 			if (this._displayState.creatingKey === -1 && this._displayState.creatingSubKey === -1) {
-				let key = this._keysUseCases.getKey(this._data, this._displayState.directory, arg)
+				let key = this._keysInteractor.getKey(this._data, this._displayState.directory, arg)
 				event.sender.send('send-key', key)
 
 				this._displayState.selectedDir = this._displayState.directory
@@ -103,13 +101,13 @@ class HomeController extends Controller {
 				subkeys = this._data.dirs[this._displayState.directory].keys[this._displayState.selectedKey].subkeys
 			else
 				subkeys = this._data.dirs[this._displayState.directory].keys[arg].subkeys
-			this._keysUseCases.openUrl(subkeys, () => {
+			this._keysInteractor.openUrl(subkeys, () => {
 				event.sender.send('no-url')
 			})
 		})
 
 		this._ipc.on('save-key', (event, arg) => {
-			this._keysUseCases.editKey(
+			this._keysInteractor.editKey(
 				this._data,
 				this._displayState.directory,
 				this._displayState.selectedKey,
@@ -122,12 +120,12 @@ class HomeController extends Controller {
 			this._displayState.creatingKey = -1
 			this._displayState.creatingSubKey = -1
 
-			this._keysUseCases.save(this._filePath, JSON.stringify(this._data), this._password)
+			this._keysInteractor.save(this._filePath, JSON.stringify(this._data), this._password)
 		})
 
 		this._ipc.on('get-subkey', (event, arg) => {
 			if (this._displayState.creatingKey === -1 && this._displayState.creatingSubKey === -1) {
-				let subkey = this._keysUseCases.getSubkey(
+				let subkey = this._keysInteractor.getSubkey(
 					this._data,
 					this._displayState.selectedDir,
 					this._displayState.selectedKey,
@@ -147,7 +145,7 @@ class HomeController extends Controller {
 
 		this._ipc.on('del-key', (event, arg) => {
 			if (arg >= 0) {
-				this._keysUseCases.deleteKey(this._data, this._displayState.directory, arg)
+				this._keysInteractor.deleteKey(this._data, this._displayState.directory, arg)
 				event.sender.send('send-keys', this._data.dirs[this._displayState.directory].keys)
 
 				if (this._displayState.selectedDir === this._displayState.directory && this._displayState.selectedKey === arg) {
@@ -160,7 +158,7 @@ class HomeController extends Controller {
 					this._displayState.creatingSubKey = -1
 				}
 
-				this._keysUseCases.save(this._filePath, JSON.stringify(this._data), this._password)
+				this._keysInteractor.save(this._filePath, JSON.stringify(this._data), this._password)
 			}
 		})
 
@@ -170,7 +168,7 @@ class HomeController extends Controller {
 				return
 			}
 
-			let key = this._keysUseCases.addEmptyKey(this._data, this._displayState.directory, arg)
+			let key = this._keysInteractor.addEmptyKey(this._data, this._displayState.directory, arg)
 
 			event.sender.send('send-keys', this._data.dirs[this._displayState.directory].keys)
 			event.sender.send('send-key', key)
@@ -181,11 +179,11 @@ class HomeController extends Controller {
 			this._displayState.creatingKey = this._displayState.selectedKey
 			this._displayState.creatingSubKey = this._displayState.selectedSubKey
 
-			this._keysUseCases.save(this._filePath, JSON.stringify(this._data), this._password)
+			this._keysInteractor.save(this._filePath, JSON.stringify(this._data), this._password)
 		})
 
 		this._ipc.on('add-user', (event, _) => {
-			let subkey = this._keysUseCases.addEmptySubkey(this._data, this._displayState.selectedDir, this._displayState.selectedKey)
+			let subkey = this._keysInteractor.addEmptySubkey(this._data, this._displayState.selectedDir, this._displayState.selectedKey)
 
 			event.sender.send('send-key', this._data.dirs[this._displayState.selectedDir].keys[this._displayState.selectedKey])
 			event.sender.send('send-subkey', subkey)
@@ -193,7 +191,7 @@ class HomeController extends Controller {
 			this._displayState.selectedSubKey = this._data.dirs[this._displayState.selectedDir].keys[this._displayState.selectedKey].subkeys.length - 1
 			this._displayState.creatingSubKey = this._displayState.selectedSubKey
 
-			this._keysUseCases.save(this._filePath, JSON.stringify(this._data), this._password)
+			this._keysInteractor.save(this._filePath, JSON.stringify(this._data), this._password)
 		})
 
 		this._ipc.on('del-user', (event, _) => {
@@ -201,7 +199,7 @@ class HomeController extends Controller {
 		})
 
 		this._ipc.on('copy', (event, arg) => {
-			this._keysUseCases.copyValue(
+			this._keysInteractor.copyValue(
 				this._data,
 				this._displayState.selectedDir,
 				this._displayState.selectedKey,
@@ -211,12 +209,12 @@ class HomeController extends Controller {
 		})
 
 		this._ipc.on('generate-password', (event, arg) => {
-			event.sender.send('send-hash', this._passwordUseCases.generatePassword(arg))
+			event.sender.send('send-hash', this._keysInteractor.generatePassword(arg))
 		})
 
 		this._ipc.on('move-key', (event, arg) => {
-			this._keysUseCases.moveKey(this._data, this._displayState.directory, arg)
-			this._keysUseCases.save(this._filePath, JSON.stringify(this._data), this._password)
+			this._keysInteractor.moveKey(this._data, this._displayState.directory, arg)
+			this._keysInteractor.save(this._filePath, JSON.stringify(this._data), this._password)
 
 			event.sender.send('send-keys', this._data.dirs[this._displayState.directory].keys)
 		})
@@ -227,12 +225,12 @@ class HomeController extends Controller {
 
 		if (this._displayState.creatingKey !== -1) {
 			this._data.dirs[this._displayState.directory].keys.splice(this._displayState.creatingKey, 1)
-			this._keysUseCases.save(this._filePath, JSON.stringify(this._data), this._password)
+			this._keysInteractor.save(this._filePath, JSON.stringify(this._data), this._password)
 		}
 	}
 
 	deleteSubKey(event) {
-		this._keysUseCases.deleteSubkey(
+		this._keysInteractor.deleteSubkey(
 			this._data,
 			this._displayState.directory,
 			this._displayState.selectedKey,
@@ -251,7 +249,7 @@ class HomeController extends Controller {
 				}
 				this._displayState.creatingKey = -1
 				this._displayState.creatingSubKey = -1
-				this._keysUseCases.save(self._filePath, JSON.stringify(self._data), self._password)
+				this._keysInteractor.save(this._filePath, JSON.stringify(this._data), this._password)
 			})
 	}
 }

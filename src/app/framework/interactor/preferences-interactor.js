@@ -1,9 +1,9 @@
-const PreferencesRepository = require('../../core/data/preferences-repository')
-const LocalPreferencesDataSource = require('./gataway/local-preferences-data-source')
-const GetPreferences = require('../../core/usecases/preferences/get-preferences')
-const SavePreferences = require('../../core/usecases/preferences/save-preferences')
+const PreferencesRepository = require('../../../core/data/preferences-repository')
+const LocalPreferencesDataSource = require('../gataway/local-preferences-data-source')
+const GetPreferences = require('../../../core/usecases/preferences/get-preferences')
+const SavePreferences = require('../../../core/usecases/preferences/save-preferences')
 
-module.exports = class PreferencesUseCases {
+module.exports = class PreferencesInteractor {
 
 	constructor() {
 		const preferencesRepository = new PreferencesRepository(new LocalPreferencesDataSource())

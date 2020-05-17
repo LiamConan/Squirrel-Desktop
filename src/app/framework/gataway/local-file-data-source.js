@@ -26,6 +26,7 @@ module.exports = class LocalFileDataSource extends KeysDataSource{
 				callback(json)
 			} catch (e) {
 				console.log("load error" + e)
+				callback(null);
 			}
 		})
 	}

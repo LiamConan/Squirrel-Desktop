@@ -16,8 +16,9 @@ const AddEmptyKey = require('../../../core/usecases/keys/add-empty-key')
 const AddEmptySubkey = require('../../../core/usecases/keys/add-empty-subkey')
 const CopyValue = require('../../../core/usecases/keys/copy-value')
 const MoveKey = require('../../../core/usecases/keys/move-key')
+const GeneratePassword = require('../../../core/usecases/keys/generate-password')
 
-module.exports = class KeysUseCases {
+module.exports = class KeysInteractor {
 
 	constructor() {
 		const keysRepository = new KeysRepository(new LocalFileDataSource())
@@ -38,6 +39,7 @@ module.exports = class KeysUseCases {
 		this._addEmptySubkey = new AddEmptySubkey()
 		this._copyValue = new CopyValue()
 		this._moveKey = new MoveKey()
+		this._generatePassword = new GeneratePassword()
 	}
 
 	save(file, data, password, callback = null) {
@@ -102,5 +104,9 @@ module.exports = class KeysUseCases {
 
 	moveKey(data, directoryPosition, tabs) {
 		this._moveKey.execute(data, directoryPosition, tabs)
+	}
+
+	generatePassword(specs) {
+		return this._generatePassword.execute(specs)
 	}
 }

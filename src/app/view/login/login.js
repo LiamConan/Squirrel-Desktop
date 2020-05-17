@@ -40,17 +40,10 @@ $(function () {
 
 	ipc.on('error', (event, arg) => {
 		if (arg === 'password')
-			setErrorOnPassword();
+			$('#editTextPassword').addClass('is-invalid');
+		else if (arg === 'null')
+			$('#editTextPassword').addClass('is-valid');
 	});
 
 	ipc.send('get-filename');
 });
-
-function setErrorOnPassword() {
-	const editTextPassword = $('#editTextPassword')
-
-	editTextPassword.css('border', '2px solid #ce4540');
-	setTimeout(function () {
-		editTextPassword.css('border', '1px solid #353B45');
-	}, 2000);
-}

@@ -3,14 +3,14 @@ const fs = require('fs')
 const homedir = require('os').homedir()
 const Controller = require('./controller')
 const KeysUseCases = require('./interactor/keys-interactor')
-const PreferencesUseCases = require('./preferences-use-cases')
+const PreferencesInteractor = require('./interactor/preferences-interactor')
 
 class LoginController extends Controller {
 
 	static DEFAULT_DATA = JSON.stringify({"dirs": []})
 
-	_keysUseCases = new KeysUseCases()
-	_preferencesUseCases = new PreferencesUseCases()
+	_keysInteractor = new KeysUseCases()
+	_preferencesInteractor = new PreferencesInteractor()
 	_filePath
 	_isNewFile = false
 	_password = ""
@@ -24,7 +24,7 @@ class LoginController extends Controller {
 		super.handleEvents()
 
 		this._ipc.on('get-filename', (event, _) => {
-			this._preferencesUseCases.getPreferences((data) => {
+			this._preferencesInteractor.getPreferences((data) => {
 				this._filePath = data.filePath
 				event.sender.send('filename', this._filePath.toString())
 			})
@@ -59,7 +59,7 @@ class LoginController extends Controller {
 			this._password = arg
 			if (this._isNewFile) {
 				this._isNewFile = false
-				this._keysUseCases.save(this._filePath, LoginController.DEFAULT_DATA, this._password, function () {
+				this._keysInteractor.save(this._filePath, LoginController.DEFAULT_DATA, this._password, function () {
 					self.login(event, self._filePath, self._password, function (content) {
 						this.loadController('home/home.html', {
 							data: content,
@@ -85,12 +85,15 @@ class LoginController extends Controller {
 			if (!fs.existsSync(homedir))
 				fs.mkdirSync(homedir)
 
-			this._preferencesUseCases.savePreferences({
+			this._preferencesInteractor.savePreferences({
 				'filePath': file.toString()
 			})
-			this._keysUseCases.load(file, password, function (content) {
-				if (callback != null)
-					callback(content)
+			this._keysInteractor.load(file, password, function (content) {
+				if (callback != null && content != null) {
+					event.sender.send('error', 'null');
+					callback(content);
+				} else
+					event.sender.send('error', 'password');
 			})
 		}
 	}
