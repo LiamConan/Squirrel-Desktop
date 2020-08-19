@@ -1,0 +1,105 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    background-color: white;
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+}
+
+header {
+    width: 100%;
+    padding: 10px;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+header img {
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+}
+
+header h2 {
+    display: inline-block;
+    margin: 0 0 0 10px;
+    vertical-align: middle;
+    font-family: Product-sans, serif;
+    font-weight: 100;
+    font-size: 22px;
+    color: #5f6368;
+}
+
+#list {
+    display: block;
+    height: 100%;
+    padding: 0;
+    list-style-type: none;
+    scroll-behavior: auto;
+    overflow: scroll;
+}
+
+#list .drive-file {
+    padding: 5px;
+    line-height: 40px;
+    color: white;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid #E1E1E1;
+    text-align: left;
+}
+
+#list .drive-file img {
+    width: 26px;
+    height: 26px;
+    margin-left: 20px;
+    vertical-align: middle;
+    line-height: 40px;
+}
+
+#list .drive-file p {
+    display: inline-block;
+    margin: 0 0 0 20px;
+    line-height: 32px;
+    vertical-align: middle;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: Roboto-light, serif;
+    font-weight: bold;
+    color: grey;
+}
+
+.selected {
+    background-color: rgb(233, 240, 253);
+}
+
+button {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    padding: 7px 22px 7px 22px;
+    background-color: rgb(52, 117, 224);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-family: Roboto-light, serif;
+    font-weight: 900;
+    font-size: 14px;
+    box-shadow: none;
+}
+
+button:hover {
+    box-shadow: 0 4px 10px #D0D0D0;
+}
+
+button:active {
+    outline: none;
+    box-shadow: 0 3px 10px #C0C0C0;
+}
+
+button:focus {
+    outline: none;
+}

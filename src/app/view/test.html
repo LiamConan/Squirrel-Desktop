@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+<head>
+	<meta charset="utf-8"/>
+	<title>Google Picker Example</title>
+
+	<script type="text/javascript">
+
+		const {google} = require('googleapis');
+
+		let developerKey = 'sTYyu0c2_KlqSa80i3tkMPI-';
+		let clientId = "730166257838-in0gr0tlbj8gns83sbdtsem8pqr3cj36.apps.googleusercontent.com"
+		let appId = "squirrel-1596289454513";
+		let scope = ['https://www.googleapis.com/auth/drive.file'];
+		let pickerApiLoaded = false;
+		let oauthToken;
+
+		function loadPicker() {
+			gapi.load('auth', {'callback': onAuthApiLoad});
+			gapi.load('picker', {'callback': onPickerApiLoad});
+		}
+
+		function onAuthApiLoad() {
+			window.gapi.auth.authorize(
+				{
+					'client_id': clientId,
+					'scope': scope,
+					'immediate': false
+				},
+				handleAuthResult
+			);
+		}
+
+		function onPickerApiLoad() {
+			pickerApiLoaded = true;
+			createPicker();
+		}
+
+		function handleAuthResult(authResult) {
+			if (authResult && !authResult.error) {
+				console.log(authResult);
+				console.log(authResult.error);
+				console.log(authResult.access_token);
+				oauthToken = authResult.access_token;
+				createPicker();
+			}
+		}
+
+		// Create and render a Picker object for searching images.
+		function createPicker() {
+			if (pickerApiLoaded && oauthToken) {
+				const view = new google.picker.View(google.picker.ViewId.DOCS);
+				view.setMimeTypes("image/png,image/jpeg,image/jpg");
+				const picker = new google.picker.PickerBuilder()
+					.enableFeature(google.picker.Feature.NAV_HIDDEN)
+					.enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+					.setAppId(appId)
+					.setOAuthToken(oauthToken)
+					.addView(view)
+					.addView(new google.picker.DocsUploadView())
+					.setDeveloperKey(developerKey)
+					.setCallback(pickerCallback)
+					.build();
+				picker.setVisible(true);
+			}
+		}
+
+		// A simple callback implementation.
+		function pickerCallback(data) {
+			if (data.action === google.picker.Action.PICKED) {
+				const fileId = data.docs[0].id;
+				alert('The user selected: ' + fileId);
+			}
+		}
+	</script>
+</head>
+<body>
+<div id="result"></div>
+
+<!-- The Google API Loader script. -->
+<script type="text/javascript" src="https://apis.google.com/js/api.js?onload=loadPicker"></script>
+</body>
+</html>

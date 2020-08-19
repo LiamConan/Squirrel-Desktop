@@ -1,0 +1,91 @@
+html {
+    width: 100%;
+}
+
+body {
+    width: 100%;
+    padding: 10px;
+    background-color: white;
+}
+
+p {
+    width: 100%;
+    font-size: 14px;
+}
+
+img {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+}
+
+img:hover {
+    cursor: pointer;
+}
+
+#auth-link {
+    display: inline-block;
+    width: calc(100% - 30px);
+    line-height: 20px;
+    vertical-align: middle;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: blue;
+    cursor: pointer;
+}
+
+form {
+    margin-top: 50px;
+}
+
+input[type="text"] {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #313440;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border: none;
+    border-bottom: 2px solid #9E3B39;
+}
+
+input[type="button"] {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    padding: 7px 22px 7px 22px;
+    background-color: rgb(52, 117, 224);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-family: Roboto-light, serif;
+    font-weight: 900;
+    font-size: 14px;
+    box-shadow: none;
+}
+
+input[type="button"]:hover {
+    box-shadow: 0 4px 10px #D0D0D0;
+}
+
+input[type="button"]:active {
+    outline: none;
+    box-shadow: 0 3px 10px #C0C0C0;
+}
+
+input[type="button"]:focus {
+    outline: none;
+}
+
+#copy-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 46px;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.2s ease 0s;
+}

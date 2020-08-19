@@ -6,6 +6,10 @@ $(function () {
 		ipc.send('choose-file');
 	});
 
+	$('#buttonDriveFile').on('click', function () {
+		ipc.send('choose-drive-file');
+	});
+
 	$('#buttonNewFile').on('click', function () {
 		ipc.send('new-file');
 	});
@@ -46,4 +50,5 @@ $(function () {
 	});
 
 	ipc.send('get-filename');
+
 });

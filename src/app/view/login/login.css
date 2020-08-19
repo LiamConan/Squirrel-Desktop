@@ -1,86 +1,78 @@
-html
-{
-	height: 100%;
+html {
+    height: 100%;
 }
 
-body
-{
-	height: 100%;
-	margin: 0;
-	/*padding-top: 47px;*/
-	background-color: #313440;
-	font-family: 'Roboto', sans-serif;
+body {
+    height: 100%;
+    margin: 0;
+    /*padding-top: 47px;*/
+    background-color: #313440;
+    font-family: 'Roboto', sans-serif;
 }
 
-form
-{
-	height: 133px;
-	padding: 20px;
+form {
+    height: 133px;
+    padding: 20px;
 }
 
-#left
-{
-	display: inline-block;
-	width: 80%;
+#left {
+    display: inline-block;
+    width: 80%;
 }
 
-input[type=text], input[type=password], #buttonFile
-{
-	background-color: #353B45;
-	border-color: #353B45;
-}
-input[type=text]:focus, input[type=password]:focus, #buttonFile:focus
-{
-	background-color: #353B45;
-	border: none;
+input[type=text], input[type=password] {
+    background-color: #353B45;
+    border-color: #353B45;
 }
 
-#editTextFile
-{
-	width: calc(100% - 120px);
+input[type=text]:focus, input[type=password]:focus, #buttonFile:focus {
+    background-color: #353B45;
+    border: none;
 }
 
-#editTextPassword
-{
-	width: 85%;
+#editTextFile {
+    width: calc(100% - 170px);
 }
 
-#editTextFile, #editTextPassword
-{
-	display: inline-block;
-	margin: 0;
-	color: #9EA1B4;
+#editTextPassword {
+    width: 85%;
 }
 
-#buttonSubmit, #buttonFile
-{
-	display: inline-block;
-	overflow: hidden;
-	cursor: pointer;
+#editTextFile, #editTextPassword {
+    display: inline-block;
+    margin: 0;
+    color: #9EA1B4;
 }
 
-#buttonFile
-{
-	width: 50px;
-}
-#buttonNewFile
-{
-	display: inline-block;
+#buttonSubmit, #buttonFile {
+    display: inline-block;
+    overflow: hidden;
+    cursor: pointer;
 }
 
-#buttonSubmit
-{
-	width: 18%;
-	height: 100%;
-	vertical-align: top;
+#buttonFile {
+    width: 50px;
 }
 
-#buttonSubmit img
-{
-	margin-top: 22px;
+#buttonNewFile {
+    display: inline-block;
 }
 
-.btn
-{
-	cursor: pointer;
+#buttonDriveFile img {
+	width: 24px;
+    height: 24px;
+}
+
+#buttonSubmit {
+    width: 18%;
+    height: 100%;
+    vertical-align: top;
+}
+
+#buttonSubmit img {
+    margin-top: 22px;
+}
+
+.btn {
+    cursor: pointer;
 }

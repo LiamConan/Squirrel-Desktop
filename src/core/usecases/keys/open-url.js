@@ -1,21 +1,20 @@
-const {shell} = require('electron')
+const {shell} = require('electron');
 
 module.exports = class OpenUrl {
 
 	execute(subkeys, onFailure) {
-		let i = 0
+		let url = null;
+		const consistents = subkeys.filter(subkey => subkey.url !== "");
+		if (consistents.length > 0)
+			url = consistents[0];
 
-		while (subkeys[i].url === '' && i < subkeys.length)
-			i++
-		let url = subkeys[i].url
-
-		if (url != null && url !== '' && url !== "") {
+		if (url !== null && url !== undefined) {
 			if (null == url.match(/https?:\/\/*/))
-				shell.openExternal('http://' + url).then()
+				shell.openExternal('http://' + url).then();
 			else
-				shell.openExternal(url).then()
+				shell.openExternal(url).then();
 		} else {
-			onFailure()
+			onFailure();
 		}
 	}
-}
+};

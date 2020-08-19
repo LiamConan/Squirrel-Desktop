@@ -1,14 +1,18 @@
 module.exports = class KeysRepository {
 
 	constructor(dataSource) {
-		this._dataSource = dataSource
+		this._dataSource = dataSource;
 	}
 
-	save(file, data, password, callback = null) {
-		this._dataSource.save(file, data, password, callback)
+	listFiles(callback, onAuthorize) {
+		return this._dataSource.listFiles(callback, onAuthorize);
 	}
 
-	load(file, password, callback) {
-		this._dataSource.load(file, password, callback)
+	save(file, data, password) {
+		this._dataSource.save(file, data, password);
 	}
-}
+
+	load(file, password) {
+		return this._dataSource.load(file, password);
+	}
+};

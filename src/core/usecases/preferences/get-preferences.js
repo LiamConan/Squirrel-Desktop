@@ -1,10 +1,10 @@
 module.exports = class GetPreferences {
 
 	constructor(repository) {
-		this._repository = repository
+		this._repository = repository;
 	}
 
-	execute(callback) {
-		this._repository.get(callback)
+	execute() {
+		return this._repository.get();
 	}
-}
+};

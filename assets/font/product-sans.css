@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "Product-sans";
+  src: url("Product-sans/Product-Sans-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Product-sans-bold";
+  src: url("Product-sans/Product-Sans-Bold.ttf");
+}

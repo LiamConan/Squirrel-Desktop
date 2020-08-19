@@ -1,10 +1,14 @@
 module.exports = class KeysDataSource {
 
-	save(file, data, password, callback = null) {
+	listFiles(callback, onAuthorize) {
 		throw new Error('You must implement this function')
 	}
 
-	load(file, password, callback) {
+	save(file, data, password) {
+		throw new Error('You must implement this function')
+	}
+
+	load(file, password) {
 		throw new Error('You must implement this function')
 	}
 }

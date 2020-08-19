@@ -1,26 +1,24 @@
 $(function () {
-	const electron = require('electron');
-	const ipc = electron.ipcRenderer;
-
-	let app = electron.remote;
+	const {ipcRenderer: ipc, remote: app} = require('electron');
 
 	let dirIDToRename = -1;
 	let dirIDToDelete = -1;
 	let keyIDToDelete = -1;
 	let deleteSubKey = false;
-
 	let ctrl = false;
 
 	$(document).on('keydown', function (e) {
 		if (e.key === 'Control') {
 			ctrl = true;
-			$('#list #keys li:nth-child(2n+1)').css('background-color', '#3C6DA8');
+			$('#list #keys li:nth-child(2n+1)')
+				.css('background-color', '#3C6DA8');
 		}
 	});
 	$(document).on('keyup', function (e) {
 		if (e.key === 'Control') {
 			ctrl = false;
-			$('#list #keys li:nth-child(2n+1)').css('background-color', '#6E7180');
+			$('#list #keys li:nth-child(2n+1)')
+				.css('background-color', '#6E7180');
 		}
 	});
 
@@ -28,7 +26,7 @@ $(function () {
 
 	ipc.on('send-dirs', (event, arg) => showDirectories(arg));
 
-	ipc.on('select-dir', (event, arg) => selectDirectory(arg))
+	ipc.on('select-dir', (event, arg) => selectDirectory(arg));
 
 	ipc.on('send-keys', (event, arg) => showKeys(arg));
 
@@ -43,6 +41,7 @@ $(function () {
 	});
 
 	ipc.on('no-url', () => {
+		console.log("no url");
 		$('#no_url').slideDown(500).delay(2000).slideUp(500);
 	});
 
@@ -57,43 +56,52 @@ $(function () {
 	ipc.send('get-data');
 
 	function loadInterface(data) {
-		showDirectories(data.dirs)
+		showDirectories(data.dirs);
 
 		if (data.dirs.length > 0)
-			showKeys(data.dirs[0].keys)
+			showKeys(data.dirs[0].keys);
 
 		$('#validate-change-password').on('click', function () {
-			if ($('#actual_password').val() === $('#new_password').val())
-				$('#alert-old-new-passwords-equal').slideDown(500).delay(2000).slideUp(500)
-			else if ($('#new_password').val() !== $('#confirmation_password').val()) {
-				$('#alert-confirmation-not-match').slideDown(500).delay(2000).slideUp(500)
+			if ($('#actual_password').val() === $('#new_password').val()) {
+				$('#alert-old-new-passwords-equal')
+					.slideDown(500)
+					.delay(2000)
+					.slideUp(500);
+			} else if ($('#new_password').val() !== $('#confirmation_password')
+				.val()) {
+				{
+					$('#alert-confirmation-not-match')
+						.slideDown(500)
+						.delay(2000)
+						.slideUp(500);
+				}
 			} else {
 				ipc.send('change-password', {
 					'actual': $('#actual_password').val(),
 					'new': $('#new_password').val()
 				});
-				closeChangePasswordModal()
+				closeChangePasswordModal();
 			}
 		});
 
 		$('#cancel-change-password').on('click', closeChangePasswordModal);
 
 		$('#add_dir').on('click', function () {
-			onAddDirectory()
+			onAddDirectory();
 		});
 
 		$("#editTextNewDir").on('keyup', function (e) {
 			if (e.key === 'Enter')
-				onAddDirectory()
+				onAddDirectory();
 		});
 
 		$('#add_key').on('click', function () {
-			onAddKey()
+			onAddKey();
 		});
 
 		$('#editTextNewKey').on('keyup', function (e) {
 			if (e.key === 'Enter')
-				onAddKey()
+				onAddKey();
 		});
 
 		$('#add-user').on('click', function () {
@@ -106,13 +114,14 @@ $(function () {
 		});
 
 		$('#key_save').on('click', function () {
-			let title = $('#key_title').val()
-			let user = $('#user').val()
-			let email = $('#mail').val()
-			let password = $('#password').val()
-			let date = $('#date').val()
-			let url = $('#url').val()
-			let note = $('#note').val().replace(/(?:\r\n|\r|\n)/g, '<br/>').replace(/(?:")/g, '\\"')
+			let title = $('#key_title').val();
+			let user = $('#user').val();
+			let email = $('#mail').val();
+			let password = $('#password').val();
+			let date = $('#date').val();
+			let url = $('#url').val();
+			let note = $('#note').val().replace(/(?:\r\n|\r|\n)/g, '<br/>')
+				.replace(/(?:")/g, '\\"');
 
 			if (title === "")
 				setErrorOn('key_title');
@@ -131,7 +140,7 @@ $(function () {
 						'url': url,
 						'note': note
 					},
-				})
+				});
 			}
 		});
 
@@ -141,17 +150,23 @@ $(function () {
 
 		$('#copy_username').on('click', function () {
 			ipc.send('copy', 'username');
-			$('#copied').slideDown(500).delay(1000).slideUp(500)
+			$('#copied')
+				.slideDown(500)
+				.delay(1000)
+				.slideUp(500);
 		});
 
 		$('#copy_mail').on('click', function () {
 			ipc.send('copy', 'mail');
-			$('#copied').slideDown(500).delay(1000).slideUp(500)
+			$('#copied')
+				.slideDown(500)
+				.delay(1000)
+				.slideUp(500);
 		});
 
 		$('#copy_password').on('click', function () {
 			ipc.send('copy', 'password');
-			$('#copied').slideDown(500).delay(1000).slideUp(500)
+			$('#copied').slideDown(500).delay(1000).slideUp(500);
 		});
 
 		$('#copy_url').on('click', function () {
@@ -159,7 +174,7 @@ $(function () {
 		});
 
 		$('#generate-password').on('click', function () {
-			let n = $('#nb-charac').val()
+			let n = $('#nb-charac').val();
 			let min = $('#check-min').is(':checked');
 			let maj = $('#check-maj').is(':checked');
 			let num = $('#check-num').is(':checked');
@@ -171,7 +186,8 @@ $(function () {
 			else if (n.length > 4)
 				$('#too_long_number').slideDown(500).delay(2000).slideUp(500);
 			else if (!min && !maj && !num && !spa && !spe)
-				$('#check_one_at_least').slideDown(500).delay(2000).slideUp(500);
+				$('#check_one_at_least').slideDown(500).delay(2000)
+					.slideUp(500);
 			else {
 				ipc.send('generate-password', {
 					'n': n,
@@ -180,7 +196,7 @@ $(function () {
 					'num': num,
 					'spa': spa,
 					'spe': spe
-				})
+				});
 			}
 		});
 
@@ -237,20 +253,25 @@ $(function () {
 
 		$("#eye-toggle").on('click', () => {
 			if ($("#password").attr('type') === 'password') {
-				$("#password").prop('type', 'text')
-				$("#eye-icon").prop('src', '../../../../assets/img/eye-off.svg')
+				$("#password").prop('type', 'text');
+				$("#eye-icon")
+					.prop('src', '../../../../assets/img/eye-off.svg');
 			} else {
-				$("#password").prop('type', 'password')
-				$("#eye-icon").prop('src', '../../../../assets/img/eye.svg')
+				$("#password").prop('type', 'password');
+				$("#eye-icon").prop('src', '../../../../assets/img/eye.svg');
 			}
-		})
+		});
 	}
 
 	function showDirectories(dirs) {
 		$('#list_dirs').empty();
-
-		for (let i = 0; i < dirs.length; i++)
-			$('#list_dirs').append('<li><div class="dir_title ' + i + '">' + dirs[i].name + '</div></li>');
+		for (let i = 0; i < dirs.length; i++) {
+			$('#list_dirs').append(
+				`<li>
+					<div class="dir_title${i}">${dirs[i].name}</div>
+				</li>`
+			);
+		}
 
 		$('.dir_title').on('click', function () {
 			ipc.send('select-dir', $(this).attr('class').split(' ')[1]);
@@ -279,9 +300,9 @@ $(function () {
 	}
 
 	function selectDirectory(dir) {
-		let n = parseInt(dir) + 1
-		$('#list_dirs li').css('background', 'none')
-		$('#list_dirs li:nth-child(' + n + ')').css('background', '#3d414f')
+		let n = parseInt(dir) + 1;
+		$('#list_dirs li').css('background', 'none');
+		$('#list_dirs li:nth-child(' + n + ')').css('background', '#3d414f');
 	}
 
 	function showKeys(keys) {
@@ -312,7 +333,7 @@ $(function () {
 				ipc.send('go-to-url', $(this).attr('class').split(' ')[1]);
 			} else
 				ipc.send('get-key', $(this).attr('class').split(' ')[1]);
-		})
+		});
 
 		$('.key').contextmenu(function () {
 			event.preventDefault();
@@ -330,7 +351,7 @@ $(function () {
 	}
 
 	function openRightPan(key) {
-		fillRightPan(key)
+		fillRightPan(key);
 
 		$('#key').css('display', 'block');
 		$('#list_frame').css('width', '49%');
@@ -354,14 +375,15 @@ $(function () {
 		let subkeys = key.subkeys;
 		$('#dropdown-user').empty();
 		for (let i = 0; i < subkeys.length; i++)
-			$('#dropdown-user').append('<a class="dropdown-item ' + i + '" href="#">' + subkeys[i].user + '</a>');
+			$('#dropdown-user').append(
+				'<a class="dropdown-item ' + i + '" href="#">' + subkeys[i].user + '</a>');
 
 		$('.dropdown-item').on('click', function () {
 			ipc.send('get-subkey', $(this).attr('class').split(' ')[1]);
 		});
 
 		$('#key_title').val(key.name);
-		showSubKey(subkeys[0])
+		showSubKey(subkeys[0]);
 	}
 
 	function showSubKey(arg) {
@@ -374,7 +396,7 @@ $(function () {
 	}
 
 	function onAddDirectory() {
-		let editText = $('#editTextNewDir')
+		let editText = $('#editTextNewDir');
 		if (editText.val() !== "")
 			ipc.send('add-dir', editText.val());
 
@@ -405,9 +427,9 @@ $(function () {
 
 	function closeChangePasswordModal() {
 		$('#modalChangePassword').modal('hide');
-		$('#actual_password').val('')
-		$('#new_password').val('')
-		$('#confirmation_password').val('')
+		$('#actual_password').val('');
+		$('#new_password').val('');
+		$('#confirmation_password').val('');
 	}
 
 	function closePasswordGeneratorModal() {
@@ -427,12 +449,14 @@ $(function () {
 	}
 
 	function openDeleteKeyModal() {
-		$("#modalConfirmDelete").find('.modal-body p').text('Voulez-vous supprimer la clé ?');
+		$("#modalConfirmDelete").find('.modal-body p')
+			.text('Voulez-vous supprimer la clé ?');
 		$("#modalConfirmDelete").modal();
 	}
 
 	function openDeleteDirModal() {
-		$("#modalConfirmDelete").find('.modal-body p').text('Voulez-vous supprimer le dossier ?');
+		$("#modalConfirmDelete").find('.modal-body p')
+			.text('Voulez-vous supprimer le dossier ?');
 		$("#modalConfirmDelete").modal();
 	}
 });
