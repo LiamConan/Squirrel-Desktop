@@ -30,7 +30,8 @@ module.exports = class GoogleDriveDataSource extends KeysDataSource {
 				}
 				const files = res.data.files;
 				if (files.length) {
-					callback(files.map(file => new GoogleDriveFile(file.name, file.id)));
+					callback(files.map(
+						file => new GoogleDriveFile(file.name, file.id)));
 				} else {
 					console.log('No files found.');
 				}
@@ -73,9 +74,11 @@ module.exports = class GoogleDriveDataSource extends KeysDataSource {
 	}
 
 	_authenticate() {
-		const credentials = JSON.parse(fs.readFileSync('credentials.json').toString());
-		const {client_secret, client_id, redirect_uris} = credentials.installed;
-		const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+		const oAuth2Client = new google.auth.OAuth2(
+			"XXXXXX",
+			"XXXXXX",
+			"XXXXXX"
+		);
 
 		try {
 			const token = fs.readFileSync('token.json');
