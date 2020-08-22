@@ -19,7 +19,7 @@ module.exports = class LocalFileDataSource extends KeysDataSource {
 			let data = CryptUtil.decrypt(content, password);
 			return JSON.parse(data);
 		} catch (e) {
-			console.log("load error" + e);
+			console.error("load error" + e);
 			return null;
 		}
 	}

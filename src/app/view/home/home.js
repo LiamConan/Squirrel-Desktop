@@ -1,5 +1,10 @@
 $(function () {
 	const {ipcRenderer: ipc, remote: app} = require('electron');
+	const USERNAME = "username";
+	const MAIL = "mail";
+	const PASSWORD = "password";
+	const NOTIFICATION_SLIDE_DELAY = 500;
+	const NOTIFICATION_STAY_DELAY = 1000;
 
 	let dirIDToRename = -1;
 	let dirIDToDelete = -1;
@@ -37,16 +42,24 @@ $(function () {
 	ipc.on('close-right-pan', () => closeRightPan());
 
 	ipc.on('key-saved', () => {
-		$('#save_key').slideDown(500).delay(2000).slideUp(500);
+		$('#save_key')
+			.slideDown(NOTIFICATION_SLIDE_DELAY)
+			.delay(NOTIFICATION_STAY_DELAY)
+			.slideUp(NOTIFICATION_SLIDE_DELAY);
 	});
 
 	ipc.on('no-url', () => {
-		console.log("no url");
-		$('#no_url').slideDown(500).delay(2000).slideUp(500);
+		$('#no_url')
+			.slideDown(NOTIFICATION_SLIDE_DELAY)
+			.delay(NOTIFICATION_STAY_DELAY)
+			.slideUp(NOTIFICATION_SLIDE_DELAY);
 	});
 
 	ipc.on('no-dir', () => {
-		$('#no_dir').slideDown(500).delay(2000).slideUp(500);
+		$('#no_dir')
+			.slideDown(NOTIFICATION_SLIDE_DELAY)
+			.delay(NOTIFICATION_STAY_DELAY)
+			.slideUp(NOTIFICATION_SLIDE_DELAY);
 	});
 
 	ipc.on('send-hash', (event, arg) => {
@@ -61,52 +74,46 @@ $(function () {
 		if (data.dirs.length > 0)
 			showKeys(data.dirs[0].keys);
 
-		$('#validate-change-password').on('click', function () {
-			if ($('#actual_password').val() === $('#new_password').val()) {
+		$('#validate-change-password').on('click', () => {
+			let actualPassword = $('#actual_password').val();
+			let newPassword = $('#new_password').val();
+			if (actualPassword === newPassword) {
 				$('#alert-old-new-passwords-equal')
-					.slideDown(500)
-					.delay(2000)
-					.slideUp(500);
-			} else if ($('#new_password').val() !== $('#confirmation_password')
-				.val()) {
-				{
-					$('#alert-confirmation-not-match')
-						.slideDown(500)
-						.delay(2000)
-						.slideUp(500);
-				}
+					.slideDown(NOTIFICATION_SLIDE_DELAY)
+					.delay(NOTIFICATION_STAY_DELAY)
+					.slideUp(NOTIFICATION_SLIDE_DELAY);
+			} else if (newPassword !== $('#confirmation_password').val()) {
+				$('#alert-confirmation-not-match')
+					.slideDown(NOTIFICATION_SLIDE_DELAY)
+					.delay(NOTIFICATION_STAY_DELAY)
+					.slideUp(NOTIFICATION_SLIDE_DELAY);
 			} else {
 				ipc.send('change-password', {
-					'actual': $('#actual_password').val(),
-					'new': $('#new_password').val()
+					'actual': actualPassword,
+					'new': newPassword
 				});
 				closeChangePasswordModal();
 			}
 		});
 
-		$('#cancel-change-password').on('click', closeChangePasswordModal);
+		$('#cancel-change-password')
+			.on('click', () => closeChangePasswordModal());
 
-		$('#add_dir').on('click', function () {
-			onAddDirectory();
-		});
+		$('#add_dir').on('click', () => onAddDirectory());
 
-		$("#editTextNewDir").on('keyup', function (e) {
+		$("#editTextNewDir").on('keyup', (e) => {
 			if (e.key === 'Enter')
 				onAddDirectory();
 		});
 
-		$('#add_key').on('click', function () {
-			onAddKey();
-		});
+		$('#add_key').on('click', () => onAddKey());
 
-		$('#editTextNewKey').on('keyup', function (e) {
+		$('#editTextNewKey').on('keyup', (e) => {
 			if (e.key === 'Enter')
 				onAddKey();
 		});
 
-		$('#add-user').on('click', function () {
-			onAddUser();
-		});
+		$('#add-user').on('click', () => onAddUser());
 
 		$('#del-user').on('click', function () {
 			deleteSubKey = true;
@@ -148,26 +155,11 @@ $(function () {
 			ipc.send('close-right-pan');
 		});
 
-		$('#copy_username').on('click', function () {
-			ipc.send('copy', 'username');
-			$('#copied')
-				.slideDown(500)
-				.delay(1000)
-				.slideUp(500);
-		});
+		$('#copy_username').on('click', () => _copyValue(USERNAME));
 
-		$('#copy_mail').on('click', function () {
-			ipc.send('copy', 'mail');
-			$('#copied')
-				.slideDown(500)
-				.delay(1000)
-				.slideUp(500);
-		});
+		$('#copy_mail').on('click', () => _copyValue(MAIL));
 
-		$('#copy_password').on('click', function () {
-			ipc.send('copy', 'password');
-			$('#copied').slideDown(500).delay(1000).slideUp(500);
-		});
+		$('#copy_password').on('click', () => _copyValue(PASSWORD));
 
 		$('#copy_url').on('click', function () {
 			ipc.send('go-to-url');
@@ -200,41 +192,33 @@ $(function () {
 			}
 		});
 
-		$('#validate-hash').on('click', function () {
+		$('#validate-hash').on('click', () => {
 			$('#password').val($('#edittext-generated-pass').val());
 			closePasswordGeneratorModal();
 		});
 
-		$('#cancel-hash').on('click', closePasswordGeneratorModal);
+		$('#cancel-hash').on('click', () => closePasswordGeneratorModal());
 
 		$("#keys").sortable({
 			group: 'no-drop',
 			handle: '.icon_drag',
-			onDragStart: function ($item, container, _super) {
-				if (!container.options.drop)
-					$item.clone().insertAfter($item);
-				_super($item, container);
-			},
-			stop: function () {
+			stop: () => {
 				let tab = [];
-				$('.key').each(function () {
-					tab.push(parseInt($(this).attr('class').split(' ')[1]));
+				$('.key').each((i, it) => {
+					tab.push(parseInt($(it).attr("class").split(' ')[1]));
 				});
-
 				ipc.send('move-key', tab);
 			}
 		});
 
-		$('#confirmRename').on('click', function () {
+		$('#confirmRename').on('click', () => {
 			$('#modalRename').modal('hide');
 			onRenameDir($('#editTextreNewName').val());
 		});
 
-		$('#cancelRename').on('click', function () {
-			$('#modalRename').modal('hide');
-		});
+		$('#cancelRename').on('click', () => $('#modalRename').modal('hide'));
 
-		$('#confirmDelete').on('click', function () {
+		$('#confirmDelete').on('click', () => {
 			if (dirIDToDelete !== -1) {
 				ipc.send('del-dir', dirIDToDelete);
 				dirIDToDelete = -1;
@@ -246,38 +230,41 @@ $(function () {
 			}
 		});
 
-		$('#cancelDelete').on('click', function () {
+		$('#cancelDelete').on('click', () => {
 			dirIDToDelete = -1;
 			keyIDToDelete = -1;
 		});
 
 		$("#eye-toggle").on('click', () => {
-			if ($("#password").attr('type') === 'password') {
-				$("#password").prop('type', 'text');
+			let passwordField = $("#password");
+			if (passwordField.attr('type') === 'password') {
+				passwordField.prop('type', 'text');
 				$("#eye-icon")
 					.prop('src', '../../../../assets/img/eye-off.svg');
 			} else {
-				$("#password").prop('type', 'password');
+				passwordField.prop('type', 'password');
 				$("#eye-icon").prop('src', '../../../../assets/img/eye.svg');
 			}
 		});
 	}
 
 	function showDirectories(dirs) {
-		$('#list_dirs').empty();
+		let directories = $('#list_dirs');
+		directories.empty();
 		for (let i = 0; i < dirs.length; i++) {
-			$('#list_dirs').append(
-				`<li>
-					<div class="dir_title${i}">${dirs[i].name}</div>
+			directories.append(
+				`<li class="dir_title ${i}">
+					<div>${dirs[i].name}</div>
 				</li>`
 			);
 		}
 
-		$('.dir_title').on('click', function () {
+		let directoryTitle = $('.dir_title');
+		directoryTitle.on('click', function () {
 			ipc.send('select-dir', $(this).attr('class').split(' ')[1]);
 		});
 
-		$('.dir_title').contextmenu(function () {
+		directoryTitle.contextmenu(function () {
 			event.preventDefault();
 			const template = [
 				{
@@ -306,28 +293,21 @@ $(function () {
 	}
 
 	function showKeys(keys) {
-		$('#keys').empty();
+		let keysList = $('#keys');
+		keysList.empty();
 
 		for (let i = 0; i < keys.length; i++) {
-			let keyHTML = '';
-
-			if (keys[i].length > 1)
-				keyHTML += '<li><ol>';
-
-			keyHTML += '<li class="key ' + i + '">' +
-				'<img class="icon_drag" src="../../../../assets/img/menu.svg"/>' +
-				'<div class="keys_title">' + keys[i].name + '</div>' +
-				'<div class="date">' + keys[i].date + '</div>' +
-				'</li>';
-
-			if (keys[i].length > 1)
-				keyHTML += '</li></ol>';
-
-
-			$('#keys').append(keyHTML);
+			keysList.append(
+				`<li class="key ${i}">
+					<img class="icon_drag" src="../../../../assets/img/menu.svg" alt="handler"/>
+					<div class="keys_title">${keys[i].name}</div>
+					<div class="date">${keys[i].date}</div>
+				</li>`
+			);
 		}
 
-		$('.key').on('click', function () {
+		let keyItem = $('.key');
+		keyItem.on('click', function () {
 			if (ctrl) {
 				ctrl = false;
 				ipc.send('go-to-url', $(this).attr('class').split(' ')[1]);
@@ -335,7 +315,7 @@ $(function () {
 				ipc.send('get-key', $(this).attr('class').split(' ')[1]);
 		});
 
-		$('.key').contextmenu(function () {
+		keyItem.contextmenu(function () {
 			event.preventDefault();
 			const template = [
 				{
@@ -373,10 +353,13 @@ $(function () {
 
 	function fillRightPan(key) {
 		let subkeys = key.subkeys;
-		$('#dropdown-user').empty();
-		for (let i = 0; i < subkeys.length; i++)
-			$('#dropdown-user').append(
-				'<a class="dropdown-item ' + i + '" href="#">' + subkeys[i].user + '</a>');
+		let dropdown = $('#dropdown-user');
+		dropdown.empty();
+		for (let i = 0; i < subkeys.length; i++) {
+			dropdown.append(
+				`<a class="dropdown-item ${i}" href="#">${subkeys[i].user}</a>`
+			);
+		}
 
 		$('.dropdown-item').on('click', function () {
 			ipc.send('get-subkey', $(this).attr('class').split(' ')[1]);
@@ -404,10 +387,11 @@ $(function () {
 	}
 
 	function onAddKey() {
-		if ($('#editTextNewKey').val() !== "")
-			ipc.send('add-key', $('#editTextNewKey').val());
+		let newKeyField = $('#editTextNewKey');
+		if (newKeyField.val() !== "")
+			ipc.send('add-key', newKeyField.val());
 
-		$('#editTextNewKey').val('');
+		newKeyField.val('');
 	}
 
 	function onAddUser() {
@@ -449,14 +433,24 @@ $(function () {
 	}
 
 	function openDeleteKeyModal() {
-		$("#modalConfirmDelete").find('.modal-body p')
+		let modal = $("#modalConfirmDelete");
+		modal.find('.modal-body p')
 			.text('Voulez-vous supprimer la clé ?');
-		$("#modalConfirmDelete").modal();
+		modal.modal();
 	}
 
 	function openDeleteDirModal() {
-		$("#modalConfirmDelete").find('.modal-body p')
+		let modal = $("#modalConfirmDelete");
+		modal.find('.modal-body p')
 			.text('Voulez-vous supprimer le dossier ?');
-		$("#modalConfirmDelete").modal();
+		modal.modal();
+	}
+
+	function _copyValue(type) {
+		ipc.send('copy', type);
+		$('#copied')
+			.slideDown(NOTIFICATION_SLIDE_DELAY)
+			.delay(NOTIFICATION_STAY_DELAY)
+			.slideUp(NOTIFICATION_SLIDE_DELAY);
 	}
 });

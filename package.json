@@ -26,6 +26,7 @@
     "@types/jquery": "^3.3.33",
     "aes-cross": "^1.0.9",
     "copy-to-clipboard": "^3.0.8",
+    "electron-context-menu": "^2.3.0",
     "electron-packager": "^15.0.0",
     "get-stdin": "^5.0.1",
     "googleapis": "^59.0.0",

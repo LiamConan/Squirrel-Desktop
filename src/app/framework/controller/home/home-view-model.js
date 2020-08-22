@@ -6,9 +6,13 @@ module.exports = class HomeViewModel {
 	constructor(args) {
 		this._fileInteractor = new FileInteractor();
 		this._keysInteractor = new KeysInteractor();
-		this.data = args.data;
+		this._data = args.data;
 		this._password = args.password;
 		this._file = args.file;
+	}
+
+	get data() {
+		return this._data;
 	}
 
 	save() {

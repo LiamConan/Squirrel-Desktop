@@ -36,8 +36,7 @@ module.exports = class LoginController extends Controller {
 		this._ipc.on('choose-file', (event) => {
 			dialog.showOpenDialog(this._window).then((filename) => {
 				if (filename !== undefined) {
-					this._viewModel._filePath = filename.filePaths[0];
-					this._viewModel._driveFile = undefined;
+					this._viewModel.setLocalFile(filename.filePaths[0]);
 					event.sender.send('filename', this._viewModel.getLocalFile());
 				}
 			});

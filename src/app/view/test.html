@@ -38,9 +38,6 @@
 
 		function handleAuthResult(authResult) {
 			if (authResult && !authResult.error) {
-				console.log(authResult);
-				console.log(authResult.error);
-				console.log(authResult.access_token);
 				oauthToken = authResult.access_token;
 				createPicker();
 			}

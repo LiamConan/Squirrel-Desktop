@@ -12,7 +12,7 @@ module.exports = class LocalPreferencesDataSource extends PreferencesDataSource 
 	save(preferences) {
 		fs.writeFile(homedir + this._pathPrefsFile, JSON.stringify(preferences), function (err) {
 			if (err) {
-				console.log(err);
+				console.error(err);
 			}
 		});
 	}

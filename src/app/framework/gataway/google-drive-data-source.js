@@ -26,14 +26,12 @@ module.exports = class GoogleDriveDataSource extends KeysDataSource {
 				fields: 'nextPageToken, files(id, name)',
 			}, (err, res) => {
 				if (err) {
-					return console.log('The API returned an error: ' + err);
+					return console.error('The API returned an error: ' + err);
 				}
 				const files = res.data.files;
 				if (files.length) {
 					callback(files.map(
 						file => new GoogleDriveFile(file.name, file.id)));
-				} else {
-					console.log('No files found.');
 				}
 			});
 		} else {
@@ -47,13 +45,12 @@ module.exports = class GoogleDriveDataSource extends KeysDataSource {
 			const data = CryptUtil.decrypt(file.data, password);
 			return JSON.parse(data);
 		} catch (e) {
-			console.log("GoogleDriveDataSource: " + e);
+			console.error("GoogleDriveDataSource: " + e);
 			return null;
 		}
 	}
 
 	async save(id, data, password) {
-		console.log(id);
 		const content = CryptUtil.encrypt(data, password);
 		const buffer = Uint8Array.from(new Buffer(content, 'binary'));
 		const bufferStream = new stream.PassThrough();
@@ -65,11 +62,10 @@ module.exports = class GoogleDriveDataSource extends KeysDataSource {
 		await this.drive.files.update({
 			fileId: id,
 			media: media
-		}, (err, res) => {
+		}, (err, _) => {
 			if (err) {
-				return console.log(err);
+				return console.error(err);
 			}
-			console.log(res);
 		});
 	}
 

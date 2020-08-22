@@ -6,7 +6,7 @@ module.exports = class OpenUrl {
 		let url = null;
 		const consistents = subkeys.filter(subkey => subkey.url !== "");
 		if (consistents.length > 0)
-			url = consistents[0];
+			url = consistents[0].url;
 
 		if (url !== null && url !== undefined) {
 			if (null == url.match(/https?:\/\/*/))

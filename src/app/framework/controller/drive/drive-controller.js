@@ -16,7 +16,13 @@ module.exports = class DriveController extends Controller {
 
 	onLoad() {
 		super.onLoad();
-		this.loadView('drive/drive.html').then();
+		this._viewModel.listFiles((files) => {
+			this._files = files;
+			this.loadView('drive/drive.html').then();
+		}, (oAuth2Client) => {
+			this._oAuth2Client = oAuth2Client;
+			this.loadView('drive/auth-token.html').then();
+		});
 	}
 
 	handleEvents() {
@@ -30,38 +36,33 @@ module.exports = class DriveController extends Controller {
 			event.sender.send('authurl', this._authUrl);
 		});
 
-		this._ipc.on('validate-code', (event, arg) => this._authorize(event, arg));
+		this._ipc.on('validate-code', (event, arg) => this._authenticate(event, arg));
 
-		this._ipc.on('list-files', (event, _) => this._requestFiles(event));
+		this._ipc.on('list-files', (event, _) => this._getDriveFiles(event));
 
 		this._ipc.on('file-selected', (event, arg) => this._selectFile(arg));
 
 		this._ipc.on('select', (event, _) => this._select());
 	}
 
-	_requestFiles(event) {
-		this._viewModel.listFiles((files) => {
-			this._files = files;
-			event.sender.send('drive-files', files);
-		}, (oAuth2Client) => {
-			this._oAuth2Client = oAuth2Client;
-			this.loadView('drive/auth-token.html').then();
-		});
+	_getDriveFiles(event) {
+		event.sender.send('drive-files', this._files);
 	}
 
-	_authorize(event, code) {
+	_authenticate(event, code) {
 		this._oAuth2Client.getToken(code, (err, token) => {
 			if (err) {
 				return console.error('Error retrieving access token', err);
 			}
 			this._oAuth2Client.setCredentials(token);
-			// Store the token to disk for later program executions
-			fs.writeFile('token.json', JSON.stringify(token), (err) => {
-				if (err) {
-					return console.error(err);
-				}
+			fs.writeFileSync('token.json', JSON.stringify(token));
+			this._viewModel.listFiles((files) => {
+				this._files = files;
+				this.loadView('drive/drive.html').then();
+			}, (oAuth2Client) => {
+				this._oAuth2Client = oAuth2Client;
+				this.loadView('drive/auth-token.html').then();
 			});
-			this._requestFiles();
 		});
 	}
 
