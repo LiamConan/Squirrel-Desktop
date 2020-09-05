@@ -6,7 +6,11 @@ module.exports = class DriveViewModel {
 		this._fileInteractor = new FileInteractor();
 	}
 
-	listFiles(callback, onAuthorize) {
-		this._fileInteractor.listFiles(callback, onAuthorize);
+	createToken(token) {
+		this._fileInteractor.createToken(token);
+	}
+
+	listFiles(onSuccess, onFailure) {
+		this._fileInteractor.listFiles(onSuccess, onFailure);
 	}
 };

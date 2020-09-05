@@ -1,13 +1,11 @@
 const Controller = require('../controller');
 const DriveViewModel = require('./drive-view-model');
-const fs = require('fs');
 
 module.exports = class DriveController extends Controller {
 
 	constructor(window, onResult) {
 		super(window);
 		this._viewModel = new DriveViewModel();
-		this._authUrl = "";
 		this._oAuth2Client = undefined;
 		this._files = undefined;
 		this._selected = undefined;
@@ -16,27 +14,19 @@ module.exports = class DriveController extends Controller {
 
 	onLoad() {
 		super.onLoad();
-		this._viewModel.listFiles((files) => {
-			this._files = files;
-			this.loadView('drive/drive.html').then();
-		}, (oAuth2Client) => {
-			this._oAuth2Client = oAuth2Client;
-			this.loadView('drive/auth-token.html').then();
-		});
+		this._loadInterface();
 	}
 
 	handleEvents() {
 		super.handleEvents();
 
-		this._ipc.on('get-authurl', (event, _) => {
-			this._authUrl = this._oAuth2Client.generateAuthUrl({
-				access_type: 'offline',
-				scope: ['https://www.googleapis.com/auth/drive']
-			});
-			event.sender.send('authurl', this._authUrl);
-		});
+		this._ipc.on(
+			'get-authurl',
+			(event, _) => event.sender.send('authurl', this._getAuthUrl())
+		);
 
-		this._ipc.on('validate-code', (event, arg) => this._authenticate(event, arg));
+		this._ipc.on(
+			'validate-code', (event, arg) => this._authenticate(event, arg));
 
 		this._ipc.on('list-files', (event, _) => this._getDriveFiles(event));
 
@@ -45,24 +35,41 @@ module.exports = class DriveController extends Controller {
 		this._ipc.on('select', (event, _) => this._select());
 	}
 
+	_loadInterface() {
+		this._viewModel.listFiles((files) => {
+			this._files = files;
+			this.loadView('drive/drive.html').then();
+		}, (oAuth2Client) => {
+			if (oAuth2Client === null) {
+				// Problem while list files
+			} else {
+				this._oAuth2Client = oAuth2Client;
+				this.loadView('drive/auth-token.html').then();
+			}
+		});
+	}
+
 	_getDriveFiles(event) {
 		event.sender.send('drive-files', this._files);
+	}
+
+	_getAuthUrl() {
+		return this._oAuth2Client.generateAuthUrl({
+			access_type: 'offline',
+			scope: ['https://www.googleapis.com/auth/drive']
+		});
 	}
 
 	_authenticate(event, code) {
 		this._oAuth2Client.getToken(code, (err, token) => {
 			if (err) {
-				return console.error('Error retrieving access token', err);
+				console.error("DriveController :" + err);
+				// show error
+			} else {
+				this._viewModel.createToken(token);
+				this._oAuth2Client.setCredentials(token);
+				this._loadInterface();
 			}
-			this._oAuth2Client.setCredentials(token);
-			fs.writeFileSync('token.json', JSON.stringify(token));
-			this._viewModel.listFiles((files) => {
-				this._files = files;
-				this.loadView('drive/drive.html').then();
-			}, (oAuth2Client) => {
-				this._oAuth2Client = oAuth2Client;
-				this.loadView('drive/auth-token.html').then();
-			});
 		});
 	}
 

@@ -41,7 +41,7 @@ module.exports = class LoginViewModel {
 	}
 
 	getFile() {
-		return this._localFile !== undefined ? this._localFile : this._driveFile;
+		return this._localFile !== undefined ? {"localFile": this._localFile} : this._driveFile;
 	}
 
 	async login(event, password) {

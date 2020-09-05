@@ -132,7 +132,7 @@ $(function () {
 
 			if (title === "")
 				setErrorOn('key_title');
-			else if (user === "")
+			else if (user === "" && email === "")
 				setErrorOn('user');
 			else if (password === "")
 				setErrorOn('password');

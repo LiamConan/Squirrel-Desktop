@@ -1,47 +1,62 @@
-const KeysDataSource = require('../../../core/data/keys-data-source');
+const DriveDataSource = require('../../../core/data/drive-data-source');
 const GoogleDriveFile = require('./google-drive-file');
 const {google} = require('googleapis');
 const CryptUtil = require('../utils/crypt-util');
 const stream = require('stream');
 const fs = require('fs');
+const homedir = require('os').homedir();
 
-module.exports = class GoogleDriveDataSource extends KeysDataSource {
+module.exports = class GoogleDriveDataSource extends DriveDataSource {
+
+	static get TOKEN_PATH() {
+		return `${homedir}/.squirrel_token.json`;
+	}
+
+	static get AUTH() {
+		return new google.auth.OAuth2(
+			"730166257838-5epkr0f3kt2gn8tu3j95ao1frtdjdhcg.apps.googleusercontent.com",
+			"SxgoUM0uqqhiiNQ1G4bwOJMI",
+			"urn:ietf:wg:oauth:2.0:oob"
+		);
+	}
 
 	constructor() {
 		super();
-		const result = this._authenticate();
-		if (result.success) {
-			const auth = result.auth;
-			this.drive = google.drive({version: 'v3', auth});
-		}
+		this._drive = null;
+		this._authenticate();
 	}
 
-	listFiles(callback, onAuthorize) {
-		const result = this._authenticate();
-		if (result.success) {
-			const auth = result.auth;
-			const drive = google.drive({version: 'v3', auth});
-			drive.files.list({
+	createToken(token) {
+		fs.writeFileSync(
+			GoogleDriveDataSource.TOKEN_PATH, JSON.stringify(token));
+	}
+
+	listFiles(onSuccess, onFailure) {
+		if (this._drive === null && !this._authenticate().success)
+			onFailure(GoogleDriveDataSource.AUTH);
+		else {
+			this._drive.files.list({
 				pageSize: 10,
-				fields: 'nextPageToken, files(id, name)',
+				fields: 'nextPageToken, files(id, name)'
 			}, (err, res) => {
 				if (err) {
-					return console.error('The API returned an error: ' + err);
-				}
-				const files = res.data.files;
-				if (files.length) {
-					callback(files.map(
+					console.error(err);
+					onFailure(null);
+				} else {
+					onSuccess(res.data.files.map(
 						file => new GoogleDriveFile(file.name, file.id)));
 				}
 			});
-		} else {
-			onAuthorize(result.auth);
 		}
 	}
 
 	async load(id, password) {
+		if (this._drive === null && !this._authenticate().success)
+			return null;
+
 		try {
-			const file = await this.drive.files.get({fileId: id, alt: 'media'});
+			const file = await this.drive.files.get(
+				{fileId: id, alt: 'media'});
 			const data = CryptUtil.decrypt(file.data, password);
 			return JSON.parse(data);
 		} catch (e) {
@@ -70,18 +85,14 @@ module.exports = class GoogleDriveDataSource extends KeysDataSource {
 	}
 
 	_authenticate() {
-		const oAuth2Client = new google.auth.OAuth2(
-			"XXXXXX",
-			"XXXXXX",
-			"XXXXXX"
-		);
-
+		const oAuth2Client = GoogleDriveDataSource.AUTH;
 		try {
-			const token = fs.readFileSync('token.json');
+			const token = fs.readFileSync(GoogleDriveDataSource.TOKEN_PATH);
 			oAuth2Client.setCredentials(JSON.parse(token.toString()));
+			this._drive = google.drive({version: 'v3', oAuth2Client});
 			return {success: true, auth: oAuth2Client};
 		} catch (e) {
-			return {success: false, auth: oAuth2Client};
+			return {success: false};
 		}
 	}
 };

@@ -4,7 +4,7 @@ module.exports = class ListDriveFilesUsecase {
 		this._repository = repository;
 	}
 
-	execute(callback, onAuthorize) {
-		return this._repository.listFiles(callback, onAuthorize);
+	execute(onSuccess, onFailure) {
+		return this._repository.listFiles(onSuccess, onFailure);
 	}
 };

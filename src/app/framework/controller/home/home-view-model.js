@@ -17,7 +17,7 @@ module.exports = class HomeViewModel {
 
 	save() {
 		if ("localFile" in this._file)
-			this._fileInteractor.save(this._file.filePath, JSON.stringify(this.data), this._password);
+			this._fileInteractor.save(this._file.localFile, JSON.stringify(this.data), this._password);
 		else if ("_id" in this._file)
 			this._fileInteractor.saveGoogleDriveFile(this._file._id, JSON.stringify(this.data), this._password);
 	}
