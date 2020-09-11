@@ -18,7 +18,11 @@ module.exports = class LocalPreferencesDataSource extends PreferencesDataSource 
 	}
 
 	get() {
-		const data = fs.readFileSync(homedir + this._pathPrefsFile, 'utf8');
-		return JSON.parse(data);
+		try {
+			const data = fs.readFileSync(homedir + this._pathPrefsFile, 'utf8');
+			return JSON.parse(data);
+		} catch (e) {
+			return JSON.parse("{}");
+		}
 	}
 };

@@ -4,11 +4,6 @@ const LoginViewModel = require('./login-view-model');
 const HomeController = require('../home/home-controller');
 const DriveController = require('../drive/drive-controller');
 
-module.exports.DEFAULT_DATA = JSON.stringify({
-	"creditCards": [],
-	"dirs": []
-});
-
 module.exports = class LoginController extends Controller {
 
 	constructor(window) {

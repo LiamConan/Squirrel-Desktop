@@ -2,7 +2,6 @@ const homedir = require('os').homedir();
 const fs = require('fs');
 const FileInteractor = require('../../interactor/file-interactor');
 const PreferencesInteractor = require('../../interactor/preferences-interactor');
-const {DEFAULT_DATA} = require('./login-controller');
 
 module.exports = class LoginViewModel {
 
@@ -58,7 +57,10 @@ module.exports = class LoginViewModel {
 
 	async createFile(password) {
 		this.isNewFile = false;
-		this.save(this._localFile, DEFAULT_DATA, password);
+		this.save(this._localFile, JSON.stringify({
+			"creditCards": [],
+			"dirs": []
+		}), password);
 		return await this._fileInteractor.load(this._localFile, password);
 	}
 
