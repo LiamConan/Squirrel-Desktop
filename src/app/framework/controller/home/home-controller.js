@@ -47,7 +47,6 @@ module.exports = class HomeController extends Controller {
 			this._model.save();
 		});
 
-		//I want to reconcile the violence in your heart
 		this._ipc.on('del-dir', (event, arg) => {
 			this._model.deleteDirectory(arg);
 

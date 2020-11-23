@@ -246,8 +246,7 @@ $(function () {
 			let passwordField = $("#password");
 			if (passwordField.attr('type') === 'password') {
 				passwordField.prop('type', 'text');
-				$("#eye-icon")
-					.prop('src', '../../../../assets/img/eye-off.svg');
+				$("#eye-icon").prop('src', '../../../../assets/img/eye-off.svg');
 			} else {
 				passwordField.prop('type', 'password');
 				$("#eye-icon").prop('src', '../../../../assets/img/eye.svg');
