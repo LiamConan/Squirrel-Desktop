@@ -22,11 +22,16 @@ module.exports = class HomeViewModel {
 			this._fileInteractor.saveGoogleDriveFile(this._file._id, JSON.stringify(this.data), this._password);
 	}
 
-	changePassword(oldPassword, newPassword, callback) {
-		if ("localFile" in this._file)
-			this._fileInteractor.changePassword(this._file.filePath, this.data, oldPassword, newPassword, callback);
-		else if ("_id" in this._file)
-			this._fileInteractor.changeGoogleDrivePassword(this._file._id, this.data, oldPassword, newPassword, callback);
+	async changePassword(oldPass, newPass) {
+		if ("localFile" in this._file) {
+			const changed = await this._fileInteractor.changePassword(this._file.localFile, this.data, oldPass, newPass);
+			if (changed) this._password = newPass;
+			return changed;
+		} else if ("_id" in this._file) {
+			this._fileInteractor.changeGoogleDrivePassword(this._file._id, this.data, oldPass, newPass, () => {
+				this._password = newPass;
+			});
+		}
 	}
 
 	addDirectory(directoryName) {
@@ -35,10 +40,12 @@ module.exports = class HomeViewModel {
 
 	deleteDirectory(position) {
 		this._keysInteractor.deleteDirectory(this.data, position);
+		this.save();
 	}
 
 	renameDirectory(position, name) {
 		this._keysInteractor.renameDirectory(this.data, position, name);
+		this.save();
 	}
 
 	openUrl(subkeys, onFailure) {

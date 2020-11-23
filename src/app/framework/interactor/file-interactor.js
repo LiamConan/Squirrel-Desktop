@@ -49,8 +49,8 @@ module.exports = class FileInteractor {
 		return this._loadGoogleDriveFile.execute(id, password);
 	}
 
-	changePassword(filePath, data, oldPassword, newPassword, callback) {
-		this._changePassword.execute(filePath, data, oldPassword, newPassword, callback);
+	changePassword(filePath, data, oldPassword, newPassword) {
+		return this._changePassword.execute(filePath, data, oldPassword, newPassword);
 	}
 
 	changeGoogleDrivePassword(filePath, data, oldPassword, newPassword, callback) {

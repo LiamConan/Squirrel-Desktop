@@ -16,18 +16,18 @@
     "url": "git://github.com/username/repository.git"
   },
   "devDependencies": {
-    "electron": "^8.0.2"
+    "electron": "^8.5.5"
   },
   "ember-electron": {
     "icon": "assets/img/squirrel.ico"
   },
   "dependencies": {
-    "@popperjs/core": "^2.2.1",
-    "@types/jquery": "^3.3.33",
+    "@popperjs/core": "^2.5.4",
+    "@types/jquery": "^3.5.4",
     "aes-cross": "^1.0.9",
     "copy-to-clipboard": "^3.0.8",
     "electron-context-menu": "^2.3.0",
-    "electron-packager": "^15.0.0",
+    "electron-packager": "^15.1.0",
     "get-stdin": "^5.0.1",
     "googleapis": "^59.0.0",
     "keypress": "^0.2.1",

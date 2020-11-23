@@ -35,12 +35,9 @@ module.exports = class HomeController extends Controller {
 			event.sender.send('select-dir', this._displayState.directory);
 		});
 
-		this._ipc.on('change-password', (event, arg) => {
-			let self = this;
-
-			this._model.changePassword(arg.actual, arg.new, function () {
-				self._model._password = arg.new;
-			});
+		this._ipc.on('change-password', async (event, arg) => {
+			const result = await this._model.changePassword(arg.actual, arg.new);
+			if (result) event.sender.send('changed-password');
 		});
 
 		this._ipc.on('add-dir', (event, arg) => {
@@ -50,33 +47,27 @@ module.exports = class HomeController extends Controller {
 			this._model.save();
 		});
 
+		//I want to reconcile the violence in your heart
 		this._ipc.on('del-dir', (event, arg) => {
 			this._model.deleteDirectory(arg);
 
 			event.sender.send('send-dirs', this._model.data.dirs);
 			if (this._displayState.directory === arg && this._model.data.dirs.length > 0) {
 				this._displayState.directory = 0;
-				event.sender.send(
-					'send-keys', this._model.data.dirs[arg].keys);
+				event.sender.send('show-keys', this._model.data.dirs[this._displayState.directory].keys);
 			}
 			event.sender.send('select-dir', this._displayState.directory);
-
-			this._model.save();
 		});
 
 		this._ipc.on('rename-dir', (event, arg) => {
 			this._model.renameDirectory(arg.position, arg.name);
-
 			event.sender.send('send-dirs', this._model.data.dirs);
-
-			this._model.save();
 		});
 
 		this._ipc.on('select-dir', (event, arg) => {
 			if (this._displayState.creatingKey === -1) {
 				event.sender.send('select-dir', arg);
-				event.sender.send(
-					'send-keys', this._model.data.dirs[arg].keys);
+				event.sender.send('show-keys', this._model.data.dirs[arg].keys);
 				if (this._displayState.directory !== arg) {
 					event.sender.send('close-right-pan');
 					this._displayState.directory = arg;
@@ -89,7 +80,7 @@ module.exports = class HomeController extends Controller {
 		this._ipc.on('get-key', (event, arg) => {
 			if (this._displayState.creatingKey === -1 && this._displayState.creatingSubKey === -1) {
 				let key = this._model.getKey(
-					this._displayState.directory, arg);
+						this._displayState.directory, arg);
 				event.sender.send('send-key', key);
 
 				this._displayState.selectedDir = this._displayState.directory;
@@ -114,16 +105,13 @@ module.exports = class HomeController extends Controller {
 
 		this._ipc.on('save-key', (event, arg) => {
 			this._model.editKey(
-				this._displayState.directory,
-				this._displayState.selectedKey,
-				this._displayState.selectedSubKey,
-				arg
+					this._displayState.directory,
+					this._displayState.selectedKey,
+					this._displayState.selectedSubKey,
+					arg
 			);
 
-			event.sender.send(
-				'send-keys',
-				this._model.data.dirs[this._displayState.directory].keys
-			);
+			event.sender.send('show-keys', this._model.data.dirs[this._displayState.directory].keys);
 
 			this._displayState.creatingKey = -1;
 			this._displayState.creatingSubKey = -1;
@@ -134,9 +122,9 @@ module.exports = class HomeController extends Controller {
 		this._ipc.on('get-subkey', (event, arg) => {
 			if (this._displayState.creatingKey === -1 && this._displayState.creatingSubKey === -1) {
 				let subkey = this._model.getSubkey(
-					this._displayState.selectedDir,
-					this._displayState.selectedKey,
-					arg
+						this._displayState.selectedDir,
+						this._displayState.selectedKey,
+						arg
 				);
 				event.sender.send('send-subkey', subkey);
 				this._displayState.selectedSubKey = arg;
@@ -155,10 +143,7 @@ module.exports = class HomeController extends Controller {
 		this._ipc.on('del-key', (event, arg) => {
 			if (arg >= 0) {
 				this._model.deleteKey(this._displayState.directory, arg);
-				event.sender.send(
-					'send-keys',
-					this._model.data.dirs[this._displayState.directory].keys
-				);
+				event.sender.send('show-keys', this._model.data.dirs[this._displayState.directory].keys);
 
 				if (this._displayState.selectedDir === this._displayState.directory && this._displayState.selectedKey === arg) {
 					event.sender.send('close-right-pan');
@@ -181,12 +166,9 @@ module.exports = class HomeController extends Controller {
 			}
 
 			let key = this._model.addEmptyKey(
-				this._displayState.directory, arg);
+					this._displayState.directory, arg);
 
-			event.sender.send(
-				'send-keys',
-				this._model.data.dirs[this._displayState.directory].keys
-			);
+			event.sender.send('show-keys', this._model.data.dirs[this._displayState.directory].keys);
 			event.sender.send('send-key', key);
 
 			this._displayState.selectedDir = this._displayState.directory;
@@ -199,12 +181,11 @@ module.exports = class HomeController extends Controller {
 		});
 
 		this._ipc.on('add-user', (event, _) => {
-			let subkey = this._model.addEmptySubkey(
-				this._displayState.selectedDir, this._displayState.selectedKey);
+			let subkey = this._model.addEmptySubkey(this._displayState.selectedDir, this._displayState.selectedKey);
 
 			event.sender.send(
-				'send-key',
-				this._model.data.dirs[this._displayState.selectedDir].keys[this._displayState.selectedKey]
+					'send-key',
+					this._model.data.dirs[this._displayState.selectedDir].keys[this._displayState.selectedKey]
 			);
 			event.sender.send('send-subkey', subkey);
 
@@ -220,26 +201,22 @@ module.exports = class HomeController extends Controller {
 
 		this._ipc.on('copy', (event, arg) => {
 			this._model.copyValue(
-				this._displayState.selectedDir,
-				this._displayState.selectedKey,
-				this._displayState.selectedSubKey,
-				arg
+					this._displayState.selectedDir,
+					this._displayState.selectedKey,
+					this._displayState.selectedSubKey,
+					arg
 			);
 		});
 
 		this._ipc.on('generate-password', (event, arg) => {
-			event.sender.send(
-				'send-hash', this._model.generatePassword(arg));
+			event.sender.send('send-hash', this._model.generatePassword(arg));
 		});
 
 		this._ipc.on('move-key', (event, arg) => {
 			this._model.moveKey(this._displayState.directory, arg);
 			this._model.save();
 
-			event.sender.send(
-				'send-keys',
-				this._model.data.dirs[this._displayState.directory].keys
-			);
+			event.sender.send('show-keys', this._model.data.dirs[this._displayState.directory].keys);
 		});
 	}
 
@@ -248,41 +225,38 @@ module.exports = class HomeController extends Controller {
 
 		if (this._displayState.creatingKey !== -1) {
 			this._model.data.dirs[this._displayState.directory].keys.splice(
-				this._displayState.creatingKey, 1);
+					this._displayState.creatingKey, 1);
 			this._model.save();
 		}
 	}
 
 	deleteSubKey(event) {
 		this._model.deleteSubkey(
-			this._displayState.directory,
-			this._displayState.selectedKey,
-			this._displayState.selectedSubKey, (isKeyDeleted) => {
-				if (isKeyDeleted) {
-					event.sender.send('close-right-pan');
-					event.sender.send(
-						'send-keys',
-						this._model.data.dirs[this._displayState.directory].keys
-					);
+				this._displayState.directory,
+				this._displayState.selectedKey,
+				this._displayState.selectedSubKey, (isKeyDeleted) => {
+					if (isKeyDeleted) {
+						event.sender.send('close-right-pan');
+						event.sender.send('show-keys', this._model.data.dirs[this._displayState.directory].keys);
 
-					this._displayState.selectedKey = -1;
-					this._displayState.selectedSubKey = -1;
-				} else {
-					event.sender.send(
-						'send-key',
-						this._model.data.dirs[this._displayState.selectedDir].keys[this._displayState.selectedKey]
-					);
-					event.sender.send(
-						'send-subkey',
-						this._model.data.dirs[this._displayState.selectedDir].keys[this._displayState.selectedKey].subkeys[0]
-					);
+						this._displayState.selectedKey = -1;
+						this._displayState.selectedSubKey = -1;
+					} else {
+						event.sender.send(
+								'send-key',
+								this._model.data.dirs[this._displayState.selectedDir].keys[this._displayState.selectedKey]
+						);
+						event.sender.send(
+								'send-subkey',
+								this._model.data.dirs[this._displayState.selectedDir].keys[this._displayState.selectedKey].subkeys[0]
+						);
 
-					this._displayState.selectedSubKey = 0;
+						this._displayState.selectedSubKey = 0;
+					}
+					this._displayState.creatingKey = -1;
+					this._displayState.creatingSubKey = -1;
+					this._model.save();
 				}
-				this._displayState.creatingKey = -1;
-				this._displayState.creatingSubKey = -1;
-				this._model.save();
-			}
 		);
 	}
 };

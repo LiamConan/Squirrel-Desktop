@@ -33,7 +33,7 @@ $(function () {
 
 	ipc.on('select-dir', (event, arg) => selectDirectory(arg));
 
-	ipc.on('send-keys', (event, arg) => showKeys(arg));
+	ipc.on('show-keys', (event, arg) => showKeys(arg));
 
 	ipc.on('send-key', (event, arg) => openRightPan(arg));
 
@@ -60,6 +60,13 @@ $(function () {
 			.slideDown(NOTIFICATION_SLIDE_DELAY)
 			.delay(NOTIFICATION_STAY_DELAY)
 			.slideUp(NOTIFICATION_SLIDE_DELAY);
+	});
+
+	ipc.on('changed-password', () => {
+		$('#changed_password')
+				.slideDown(NOTIFICATION_SLIDE_DELAY)
+				.delay(NOTIFICATION_STAY_DELAY)
+				.slideUp(NOTIFICATION_SLIDE_DELAY);
 	});
 
 	ipc.on('send-hash', (event, arg) => {

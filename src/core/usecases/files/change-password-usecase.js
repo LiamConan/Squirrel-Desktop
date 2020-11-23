@@ -4,11 +4,9 @@ module.exports = class ChangePassword {
 		this._repository = repository;
 	}
 
-	execute(filePath, data, oldPassword, newPassword, callback) {
-		this._repository.load(filePath, oldPassword, function (_) {
-			this._repository.save(filePath, JSON.stringify(data), newPassword, () => {
-				callback();
-			});
-		});
+	async execute(filePath, data, oldPassword, newPassword) {
+		const result = await this._repository.load(filePath, oldPassword);
+		if (result !== null) await this._repository.save(filePath, JSON.stringify(data), newPassword);
+		return result !== null;
 	}
 };

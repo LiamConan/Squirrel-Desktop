@@ -19,24 +19,24 @@ $(function () {
 	});
 
 	$('#buttonSubmit').on('click', function () {
-		ipc.send('login', $('#editTextPassword').val())
+		ipc.send('login', $('#editTextPassword').val());
 	});
 
 	$("#editTextPassword").on('keyup', function (e) {
 		if (e.key === 'Enter') {
-			ipc.send('login', $(this).val())
+			ipc.send('login', $(this).val());
 		}
 	});
 
 	$("#eye-toggle").on('click', () => {
 		if ($("#editTextPassword").attr('type') === 'password') {
-			$("#editTextPassword").prop('type', 'text')
-			$("#eye-icon").prop('src', '../../../../assets/img/eye-off.svg')
+			$("#editTextPassword").prop('type', 'text');
+			$("#eye-icon").prop('src', '../../../../assets/img/eye-off.svg');
 		} else {
-			$("#editTextPassword").prop('type', 'password')
-			$("#eye-icon").prop('src', '../../../../assets/img/eye.svg')
+			$("#editTextPassword").prop('type', 'password');
+			$("#eye-icon").prop('src', '../../../../assets/img/eye.svg');
 		}
-	})
+	});
 
 	ipc.on('filename', (event, arg) => {
 		$('#editTextFile').val(arg);
