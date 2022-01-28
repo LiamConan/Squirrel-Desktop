@@ -64,7 +64,8 @@ module.exports = class LoginController extends Controller {
 		this._ipc.on('login', async (event, arg) => {
 			let content = await this._viewModel.login(event, arg);
 			if (content !== null) {
-				this.loadController(new HomeController(this._window), {
+				const homeController = new HomeController(this._window);
+				this.loadController(homeController, {
 					data: content,
 					password: arg,
 					file: this._viewModel.getFile()

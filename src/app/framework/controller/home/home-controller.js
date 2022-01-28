@@ -77,9 +77,10 @@ module.exports = class HomeController extends Controller {
 		});
 
 		this._ipc.on('get-key', (event, arg) => {
+			console.log(this._displayState.creatingKey);
+			console.log(this._displayState.creatingSubKey);
 			if (this._displayState.creatingKey === -1 && this._displayState.creatingSubKey === -1) {
-				let key = this._model.getKey(
-						this._displayState.directory, arg);
+				let key = this._model.getKey(this._displayState.directory, arg);
 				event.sender.send('send-key', key);
 
 				this._displayState.selectedDir = this._displayState.directory;
