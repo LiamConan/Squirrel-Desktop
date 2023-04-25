@@ -6,16 +6,21 @@
   "scripts": {
     "start": "electron .",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/img/squirrel.icns --prune=true --out=release-builds",
-    "package-win": "electron-packager . Squirrel --overwrite --asar --platform=win32 --arch=ia32 --icon=assets/img/squirrel.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Squirrel\"",
+    "package-win": "electron-packager . Squirrel --overwrite --asar --platform=win32 --arch=x64 --icon=assets/img/squirrel.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Squirrel\"",
     "package-linux": "electron-packager . Squirrel --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/img/squirrel.png --prune=true --out=release-builds"
   },
-  "author": "Liam",
+  "author": "Layne",
   "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git://github.com/username/repository.git"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.5",
+    "@electron-forge/maker-deb": "^6.0.5",
+    "@electron-forge/maker-rpm": "^6.0.5",
+    "@electron-forge/maker-squirrel": "^6.0.5",
+    "@electron-forge/maker-zip": "^6.0.5",
     "electron": "^8.5.5"
   },
   "ember-electron": {
@@ -27,7 +32,8 @@
     "aes-cross": "^1.0.9",
     "copy-to-clipboard": "^3.0.8",
     "electron-context-menu": "^2.3.0",
-    "electron-packager": "^15.1.0",
+    "electron-packager": "^17.1.1",
+    "electron-squirrel-startup": "^1.0.0",
     "get-stdin": "^5.0.1",
     "googleapis": "^59.0.0",
     "keypress": "^0.2.1",

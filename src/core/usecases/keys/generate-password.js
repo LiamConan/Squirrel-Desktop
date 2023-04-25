@@ -22,7 +22,7 @@ module.exports = class GeneratePassword {
 			chars += spe;
 
 		return randomstring.generate({
-			length: specs.n,
+			length: parseInt(specs.n),
 			charset: chars
 		});
 	}
